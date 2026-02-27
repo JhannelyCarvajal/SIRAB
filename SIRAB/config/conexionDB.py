@@ -3,7 +3,7 @@ from psycopg.rows import dict_row
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-DB_URL = "postgresql://postgres:1234@localhost:5432/sirab"
+DB_URL = "postgresql://postgres:12345@localhost:5432/SIRAB"
 
 async_pool: AsyncConnectionPool | None = None
 
