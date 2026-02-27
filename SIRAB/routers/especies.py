@@ -16,6 +16,7 @@ async def listar_especies(conn = Depends(get_conexion)):
 
 @router.post("/")
 async def crear_especie(especie: dict, conn = Depends(get_conexion)):
+    print(especie"Ah sido ingresado")
     try:
         query = """
             INSERT INTO especies
