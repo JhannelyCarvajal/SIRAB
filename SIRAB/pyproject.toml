@@ -1,0 +1,11 @@
+[project]
+name = "sirab"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.133.1",
+    "psycopg[binary,pool]>=3.3.3",
+    "uvicorn[standard]>=0.41.0",
+]
