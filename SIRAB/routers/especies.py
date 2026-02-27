@@ -6,9 +6,7 @@ router = APIRouter()
 
 @router.get("/")
 async def listar_especies(conn = Depends(get_conexion)):
-    print("Hola como estas")
-    
-        try:
+    try:
         query = "SELECT * FROM especies ORDER BY id_especie;"
         result = await conn.execute(query)
         return await result.fetchall()
@@ -18,7 +16,6 @@ async def listar_especies(conn = Depends(get_conexion)):
 
 @router.post("/")
 async def crear_especie(especie: dict, conn = Depends(get_conexion)):
-    print(especie"Ah sido ingresado")
     try:
         query = """
             INSERT INTO especies
