@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registrar Centro — SIRAB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../CSS/registro_centro.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="logo">SIRA<span>B</span></a>
+    <a href="index.html" class="nav-back">← Volver al inicio</a>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- PANEL LATERAL -->
+    <aside class="side-panel">
+      <div class="side-deco-circle"></div>
+      <div class="side-deco-circle"></div>
+
+      <div class="side-content">
+        <span class="side-tag">🏛️ Registro institucional</span>
+        <h2>Únete a la red<br><em>SIRAB</em></h2>
+        <p>Registra tu centro de rescate y forma parte del sistema nacional de gestión de fauna silvestre de Bolivia.</p>
+
+        <div class="steps-nav" id="stepsNav">
+          <div class="step-item active" data-step="1">
+            <div class="step-dot">1</div>
+            <div class="step-info">
+              <div class="step-label">Paso 1</div>
+              <div class="step-title">Información básica</div>
+            </div>
+          </div>
+          <div class="step-item" data-step="2">
+            <div class="step-dot">2</div>
+            <div class="step-info">
+              <div class="step-label">Paso 2</div>
+              <div class="step-title">Contacto & Redes</div>
+            </div>
+          </div>
+          <div class="step-item" data-step="3">
+            <div class="step-dot">3</div>
+            <div class="step-info">
+              <div class="step-label">Paso 3</div>
+              <div class="step-title">Representante legal</div>
+            </div>
+          </div>
+          <div class="step-item" data-step="4">
+            <div class="step-dot">4</div>
+            <div class="step-info">
+              <div class="step-label">Paso 4</div>
+              <div class="step-title">Confirmación</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-footer">
+        <div class="side-note">
+          <p><strong>¿Ya tienes una cuenta?</strong><br>Si tu centro ya está registrado, accede con las credenciales de tu administrador.</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ÁREA DEL FORMULARIO -->
+    <main class="form-area">
+
+      <!-- Barra de progreso -->
+      <div class="progress-bar-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill" style="width: 25%"></div>
+        </div>
+        <div class="progress-label">
+          <span id="progressText">Paso 1 de 4</span>
+          <span id="progressPct">25%</span>
+        </div>
+      </div>
+
+      <!-- ── PASO 1: INFORMACIÓN BÁSICA ───────────────────── -->
+      <div class="step-panel active" id="step1">
+        <div class="step-header">
+          <div class="num">01</div>
+          <h3>Información básica</h3>
+          <p>Cuéntanos sobre tu centro de rescate.</p>
+        </div>
+
+        <!-- Tipo de institución -->
+        <div class="field" style="margin-bottom: 1.5rem;">
+          <label>Tipo de institución <span class="req">*</span></label>
+          <div class="tipo-group">
+            <div class="tipo-btn" onclick="selectTipo(this, 'ONG')">
+              <div class="tipo-icon">🌿</div>
+              <div class="tipo-label">ONG</div>
+              <div class="tipo-desc">Organización sin fines de lucro</div>
+            </div>
+            <div class="tipo-btn" onclick="selectTipo(this, 'Institución Pública')">
+              <div class="tipo-icon">🏛️</div>
+              <div class="tipo-label">Institución Pública</div>
+              <div class="tipo-desc">Entidad del Estado</div>
+            </div>
+            <div class="tipo-btn" onclick="selectTipo(this, 'Empresa Privada')">
+              <div class="tipo-icon">🏢</div>
+              <div class="tipo-label">Empresa Privada</div>
+              <div class="tipo-desc">Organización con fines de lucro</div>
+            </div>
+          </div>
+          <input type="hidden" name="tipo_institucion" id="tipo_institucion">
+          <span class="field-error" id="err_tipo">Selecciona un tipo de institución</span>
+        </div>
+
+        <div class="form-grid cols-2">
+          <div class="field span-2">
+            <label>Nombre del centro <span class="req">*</span></label>
+            <input type="text" id="nombre_centro" placeholder="Ej: Centro de Rescate Fauna Silvestre Cochabamba"/>
+            <span class="field-error" id="err_nombre">Este campo es obligatorio</span>
+          </div>
+
+          <div class="field">
+            <label>Departamento <span class="req">*</span></label>
+            <select id="departamento">
+              <option value="">Seleccionar...</option>
+              <option>Beni</option>
+              <option>Chuquisaca</option>
+              <option>Cochabamba</option>
+              <option>La Paz</option>
+              <option>Oruro</option>
+              <option>Pando</option>
+              <option>Potosí</option>
+              <option>Santa Cruz</option>
+              <option>Tarija</option>
+            </select>
+            <span class="field-error" id="err_depto">Selecciona un departamento</span>
+          </div>
+
+          <div class="field">
+            <label>Ciudad / Municipio <span class="req">*</span></label>
+            <input type="text" id="ciudad" placeholder="Ej: Cochabamba"/>
+            <span class="field-error" id="err_ciudad">Este campo es obligatorio</span>
+          </div>
+
+          <div class="field span-2">
+            <label>Dirección</label>
+            <input type="text" id="direccion" placeholder="Ej: Av. Blanco Galindo Km 5, zona norte"/>
+          </div>
+
+          <div class="field span-2">
+            <label>Tipos de animales que atienden <span class="req">*</span></label>
+            <div class="checkbox-group" id="tiposAnimales">
+              <label class="checkbox-item" onclick="toggleCheck(this)">
+                <input type="checkbox" value="Mamíferos">
+                <span class="check-icon">✓</span>
+                🐆 Mamíferos
+              </label>
+              <label class="checkbox-item" onclick="toggleCheck(this)">
+                <input type="checkbox" value="Aves">
+                <span class="check-icon">✓</span>
+                🦜 Aves
+              </label>
+              <label class="checkbox-item" onclick="toggleCheck(this)">
+                <input type="checkbox" value="Reptiles">
+                <span class="check-icon">✓</span>
+                🐊 Reptiles
+              </label>
+              <label class="checkbox-item" onclick="toggleCheck(this)">
+                <input type="checkbox" value="Anfibios">
+                <span class="check-icon">✓</span>
+                🐸 Anfibios
+              </label>
+              <label class="checkbox-item" onclick="toggleCheck(this)">
+                <input type="checkbox" value="Peces">
+                <span class="check-icon">✓</span>
+                🐟 Peces
+              </label>
+              <label class="checkbox-item" onclick="toggleCheck(this)">
+                <input type="checkbox" value="Otros">
+                <span class="check-icon">✓</span>
+                🌿 Otros
+              </label>
+            </div>
+            <span class="field-error" id="err_animales">Selecciona al menos un tipo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PASO 2: CONTACTO & REDES ─────────────────────── -->
+      <div class="step-panel" id="step2">
+        <div class="step-header">
+          <div class="num">02</div>
+          <h3>Contacto & Redes</h3>
+          <p>¿Cómo pueden comunicarse con tu centro?</p>
+        </div>
+
+        <div class="form-grid cols-2">
+          <div class="field">
+            <label>Teléfono institucional <span class="req">*</span></label>
+            <div class="input-icon-wrap">
+              <span class="icon">📞</span>
+              <input type="tel" id="telefono" placeholder="+591 4 123-4567"/>
+            </div>
+            <span class="field-error" id="err_telefono">Este campo es obligatorio</span>
+          </div>
+
+          <div class="field">
+            <label>Email institucional <span class="req">*</span></label>
+            <div class="input-icon-wrap">
+              <span class="icon">✉️</span>
+              <input type="email" id="email_centro" placeholder="contacto@micentro.org"/>
+            </div>
+            <span class="field-error" id="err_email">Ingresa un email válido</span>
+          </div>
+
+          <div class="field span-2">
+            <label>Sitio web</label>
+            <div class="input-icon-wrap">
+              <span class="icon">🌐</span>
+              <input type="url" id="sitio_web" placeholder="https://www.micentro.org"/>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Facebook</label>
+            <div class="input-icon-wrap">
+              <span class="icon">📘</span>
+              <input type="url" id="facebook" placeholder="https://facebook.com/micentro"/>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Instagram</label>
+            <div class="input-icon-wrap">
+              <span class="icon">📸</span>
+              <input type="url" id="instagram" placeholder="https://instagram.com/micentro"/>
+            </div>
+          </div>
+
+          <div class="field span-2">
+            <label>Descripción del centro <span class="req">*</span></label>
+            <textarea id="descripcion" placeholder="Describe brevemente la misión, actividades y alcance de tu centro de rescate..."></textarea>
+            <span class="field-error" id="err_descripcion">Agrega una descripción</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PASO 3: REPRESENTANTE LEGAL ──────────────────── -->
+      <div class="step-panel" id="step3">
+        <div class="step-header">
+          <div class="num">03</div>
+          <h3>Representante legal</h3>
+          <p>Datos del responsable institucional del centro.</p>
+        </div>
+
+        <div class="form-grid cols-2">
+          <div class="field">
+            <label>Nombre(s) <span class="req">*</span></label>
+            <input type="text" id="rep_nombre" placeholder="Ej: María Elena"/>
+            <span class="field-error" id="err_rep_nombre">Este campo es obligatorio</span>
+          </div>
+
+          <div class="field">
+            <label>Apellidos <span class="req">*</span></label>
+            <input type="text" id="rep_apellido" placeholder="Ej: García López"/>
+            <span class="field-error" id="err_rep_apellido">Este campo es obligatorio</span>
+          </div>
+
+          <div class="field">
+            <label>Cargo <span class="req">*</span></label>
+            <input type="text" id="rep_cargo" placeholder="Ej: Directora Ejecutiva"/>
+            <span class="field-error" id="err_rep_cargo">Este campo es obligatorio</span>
+          </div>
+
+          <div class="field">
+            <label>NIT / Registro legal <span class="req">*</span></label>
+            <input type="text" id="nit" placeholder="Ej: 1234567890"/>
+            <span class="field-error" id="err_nit">Este campo es obligatorio</span>
+          </div>
+
+          <div class="field">
+            <label>Teléfono del representante</label>
+            <div class="input-icon-wrap">
+              <span class="icon">📱</span>
+              <input type="tel" id="rep_telefono" placeholder="+591 7 123-4567"/>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Email del representante <span class="req">*</span></label>
+            <div class="input-icon-wrap">
+              <span class="icon">✉️</span>
+              <input type="email" id="rep_email" placeholder="representante@micentro.org"/>
+            </div>
+            <span class="field-error" id="err_rep_email">Ingresa un email válido</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PASO 4: CONFIRMACIÓN ──────────────────────────── -->
+      <div class="step-panel" id="step4">
+        <div class="step-header">
+          <div class="num">04</div>
+          <h3>Confirmación</h3>
+          <p>Revisa la información antes de enviar tu solicitud.</p>
+        </div>
+
+        <div class="resumen-grid" id="resumenGrid">
+          <!-- Se llena dinámicamente con JS -->
+        </div>
+
+        <div style="margin-top: 1.5rem; padding: 1rem 1.2rem; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); border-radius: 0.75rem;">
+          <p style="font-size: 0.82rem; color: rgba(26,58,42,0.65); line-height: 1.7;">
+            ⏳ <strong>Tu solicitud será revisada</strong> por un superadministrador de SIRAB antes de ser aprobada. 
+            Recibirás una notificación al email institucional indicado.
+          </p>
+        </div>
+      </div>
+
+      <!-- Panel de éxito -->
+      <div class="success-panel" id="successPanel">
+        <div class="success-icon">🌿</div>
+        <h3>¡Solicitud enviada!</h3>
+        <p>Tu centro ha sido registrado exitosamente. Un administrador de SIRAB revisará tu solicitud y te contactará al email proporcionado.</p>
+        <span class="success-badge">✓ Pendiente de aprobación</span>
+        <br><br>
+        <a href="index.html" class="btn btn-next" style="display: inline-flex; margin-top: 0.5rem;">Volver al inicio</a>
+      </div>
+
+      <!-- Botones de navegación -->
+      <div class="form-nav" id="formNav">
+        <button class="btn btn-prev" id="btnPrev" onclick="prevStep()" style="visibility: hidden;">
+          ← Anterior
+        </button>
+        <button class="btn btn-next" id="btnNext" onclick="nextStep()">
+          Siguiente →
+        </button>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../JS/registro_centro.js"></script>
+</body>
+</html>

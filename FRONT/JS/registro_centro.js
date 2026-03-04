@@ -1,0 +1,252 @@
+// ── Estado del wizard ────────────────────────────────────
+let currentStep = 1;
+const totalSteps = 4;
+
+// ── Navegación ───────────────────────────────────────────
+function nextStep() {
+  if (!validateStep(currentStep)) return;
+  if (currentStep === totalSteps) {
+    submitForm();
+    return;
+  }
+  goToStep(currentStep + 1);
+}
+
+function prevStep() {
+  if (currentStep > 1) goToStep(currentStep - 1);
+}
+
+function goToStep(step) {
+  // Marcar paso anterior como done
+  document.querySelector(`[data-step="${currentStep}"]`).classList.remove('active');
+  document.querySelector(`[data-step="${currentStep}"]`).classList.add('done');
+
+  // Si retrocedemos, desmarcar "done" del paso actual
+  if (step < currentStep) {
+    document.querySelector(`[data-step="${currentStep}"]`).classList.remove('done');
+  }
+
+  // Ocultar panel actual
+  document.getElementById(`step${currentStep}`).classList.remove('active');
+
+  currentStep = step;
+
+  // Activar nuevo paso
+  document.getElementById(`step${currentStep}`).classList.add('active');
+  document.querySelector(`[data-step="${currentStep}"]`).classList.add('active');
+  document.querySelector(`[data-step="${currentStep}"]`).classList.remove('done');
+
+  updateProgress();
+  updateNavButtons();
+
+  // Si llegamos al paso 4, llenar resumen
+  if (currentStep === 4) fillResumen();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  const pct = Math.round((currentStep / totalSteps) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `Paso ${currentStep} de ${totalSteps}`;
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function updateNavButtons() {
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+
+  btnPrev.style.visibility = currentStep > 1 ? 'visible' : 'hidden';
+
+  if (currentStep === totalSteps) {
+    btnNext.textContent = '✓ Enviar solicitud';
+    btnNext.className = 'btn btn-submit';
+  } else {
+    btnNext.textContent = 'Siguiente →';
+    btnNext.className = 'btn btn-next';
+  }
+}
+
+// ── Validaciones por paso ─────────────────────────────────
+function validateStep(step) {
+  let valid = true;
+
+  if (step === 1) {
+    // Tipo institución
+    if (!document.getElementById('tipo_institucion').value) {
+      showError('err_tipo'); valid = false;
+    } else hideError('err_tipo');
+
+    // Nombre
+    if (!val('nombre_centro')) { showError('err_nombre'); valid = false; }
+    else hideError('err_nombre');
+
+    // Departamento
+    if (!val('departamento')) { showError('err_depto'); valid = false; }
+    else hideError('err_depto');
+
+    // Ciudad
+    if (!val('ciudad')) { showError('err_ciudad'); valid = false; }
+    else hideError('err_ciudad');
+
+    // Tipos animales
+    const checked = document.querySelectorAll('#tiposAnimales input:checked');
+    if (checked.length === 0) { showError('err_animales'); valid = false; }
+    else hideError('err_animales');
+  }
+
+  if (step === 2) {
+    if (!val('telefono')) { showError('err_telefono'); valid = false; }
+    else hideError('err_telefono');
+
+    if (!validEmail('email_centro')) { showError('err_email'); valid = false; }
+    else hideError('err_email');
+
+    if (!val('descripcion')) { showError('err_descripcion'); valid = false; }
+    else hideError('err_descripcion');
+  }
+
+  if (step === 3) {
+    ['rep_nombre', 'rep_apellido', 'rep_cargo', 'nit'].forEach(id => {
+      if (!val(id)) { showError(`err_${id}`); valid = false; }
+      else hideError(`err_${id}`);
+    });
+
+    if (!validEmail('rep_email')) { showError('err_rep_email'); valid = false; }
+    else hideError('err_rep_email');
+  }
+
+  return valid;
+}
+
+// ── Helpers ───────────────────────────────────────────────
+function val(id) {
+  return document.getElementById(id)?.value?.trim() || '';
+}
+function validEmail(id) {
+  const v = val(id);
+  return v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+function showError(id) {
+  document.getElementById(id)?.classList.add('visible');
+}
+function hideError(id) {
+  document.getElementById(id)?.classList.remove('visible');
+}
+
+// ── Tipo institución ──────────────────────────────────────
+function selectTipo(btn, value) {
+  document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('tipo_institucion').value = value;
+  hideError('err_tipo');
+}
+
+// ── Checkboxes animales ───────────────────────────────────
+function toggleCheck(label) {
+  setTimeout(() => {
+    const input = label.querySelector('input');
+    label.classList.toggle('checked', input.checked);
+    // Validar si hay al menos uno
+    const checked = document.querySelectorAll('#tiposAnimales input:checked');
+    if (checked.length > 0) hideError('err_animales');
+  }, 0);
+}
+
+// ── Resumen paso 4 ────────────────────────────────────────
+function fillResumen() {
+  const animales = [...document.querySelectorAll('#tiposAnimales input:checked')]
+    .map(i => i.value).join(', ') || '—';
+
+  const redes = [
+    val('sitio_web') ? `🌐 ${val('sitio_web')}` : '',
+    val('facebook')  ? `📘 Facebook` : '',
+    val('instagram') ? `📸 Instagram` : '',
+  ].filter(Boolean).join(' · ') || 'No indicado';
+
+  document.getElementById('resumenGrid').innerHTML = `
+    <div class="resumen-card">
+      <h4>🏛️ Institución</h4>
+      <div class="resumen-item">
+        <div class="rlabel">Tipo</div>
+        <div class="rval">${val('tipo_institucion') || '—'}</div>
+      </div>
+      <div class="resumen-item">
+        <div class="rlabel">Nombre</div>
+        <div class="rval">${val('nombre_centro') || '—'}</div>
+      </div>
+      <div class="resumen-item">
+        <div class="rlabel">Ubicación</div>
+        <div class="rval">${val('ciudad')}, ${val('departamento')}</div>
+      </div>
+      ${val('direccion') ? `<div class="resumen-item"><div class="rlabel">Dirección</div><div class="rval">${val('direccion')}</div></div>` : ''}
+    </div>
+
+    <div class="resumen-card">
+      <h4>📞 Contacto</h4>
+      <div class="resumen-item">
+        <div class="rlabel">Teléfono</div>
+        <div class="rval">${val('telefono') || '—'}</div>
+      </div>
+      <div class="resumen-item">
+        <div class="rlabel">Email</div>
+        <div class="rval">${val('email_centro') || '—'}</div>
+      </div>
+      <div class="resumen-item">
+        <div class="rlabel">Redes / Web</div>
+        <div class="rval">${redes}</div>
+      </div>
+    </div>
+
+    <div class="resumen-card">
+      <h4>👤 Representante</h4>
+      <div class="resumen-item">
+        <div class="rlabel">Nombre completo</div>
+        <div class="rval">${val('rep_nombre')} ${val('rep_apellido')}</div>
+      </div>
+      <div class="resumen-item">
+        <div class="rlabel">Cargo</div>
+        <div class="rval">${val('rep_cargo') || '—'}</div>
+      </div>
+      <div class="resumen-item">
+        <div class="rlabel">NIT / Registro</div>
+        <div class="rval">${val('nit') || '—'}</div>
+      </div>
+      <div class="resumen-item">
+        <div class="rlabel">Email</div>
+        <div class="rval">${val('rep_email') || '—'}</div>
+      </div>
+    </div>
+
+    <div class="resumen-card">
+      <h4>🐾 Fauna que atienden</h4>
+      <div class="resumen-item">
+        <div class="rval">${animales}</div>
+      </div>
+    </div>
+
+    <div class="resumen-card full">
+      <h4>📝 Descripción</h4>
+      <div class="resumen-item">
+        <div class="rval" style="font-weight:300; line-height:1.6;">${val('descripcion') || '—'}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Envío final ───────────────────────────────────────────
+function submitForm() {
+  // Aquí irá la llamada a la API: POST /centros
+  // Por ahora simula el envío
+  document.getElementById('step4').classList.remove('active');
+  document.getElementById('formNav').style.display = 'none';
+  document.getElementById('successPanel').classList.add('visible');
+
+  // Marcar paso 4 como done
+  document.querySelector('[data-step="4"]').classList.remove('active');
+  document.querySelector('[data-step="4"]').classList.add('done');
+
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressText').textContent = '¡Completado!';
+  document.getElementById('progressPct').textContent = '100%';
+}
