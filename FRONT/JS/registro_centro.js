@@ -1,9 +1,10 @@
-// ── Estado del wizard ────────────────────────────────────
 let currentStep = 1;
+
 const totalSteps = 4;
 
-// ── Navegación ───────────────────────────────────────────
+
 function nextStep() {
+
   if (!validateStep(currentStep)) return;
   if (currentStep === totalSteps) {
     submitForm();
@@ -17,21 +18,21 @@ function prevStep() {
 }
 
 function goToStep(step) {
-  // Marcar paso anterior como done
+
   document.querySelector(`[data-step="${currentStep}"]`).classList.remove('active');
   document.querySelector(`[data-step="${currentStep}"]`).classList.add('done');
 
-  // Si retrocedemos, desmarcar "done" del paso actual
+
   if (step < currentStep) {
     document.querySelector(`[data-step="${currentStep}"]`).classList.remove('done');
   }
 
-  // Ocultar panel actual
+
   document.getElementById(`step${currentStep}`).classList.remove('active');
 
   currentStep = step;
 
-  // Activar nuevo paso
+
   document.getElementById(`step${currentStep}`).classList.add('active');
   document.querySelector(`[data-step="${currentStep}"]`).classList.add('active');
   document.querySelector(`[data-step="${currentStep}"]`).classList.remove('done');
@@ -39,7 +40,7 @@ function goToStep(step) {
   updateProgress();
   updateNavButtons();
 
-  // Si llegamos al paso 4, llenar resumen
+
   if (currentStep === 4) fillResumen();
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -67,29 +68,29 @@ function updateNavButtons() {
   }
 }
 
-// ── Validaciones por paso ─────────────────────────────────
+
 function validateStep(step) {
   let valid = true;
 
   if (step === 1) {
-    // Tipo institución
+
     if (!document.getElementById('tipo_institucion').value) {
       showError('err_tipo'); valid = false;
     } else hideError('err_tipo');
 
-    // Nombre
+
     if (!val('nombre_centro')) { showError('err_nombre'); valid = false; }
     else hideError('err_nombre');
 
-    // Departamento
+
     if (!val('departamento')) { showError('err_depto'); valid = false; }
     else hideError('err_depto');
 
-    // Ciudad
+
     if (!val('ciudad')) { showError('err_ciudad'); valid = false; }
     else hideError('err_ciudad');
 
-    // Tipos animales
+
     const checked = document.querySelectorAll('#tiposAnimales input:checked');
     if (checked.length === 0) { showError('err_animales'); valid = false; }
     else hideError('err_animales');
@@ -119,7 +120,7 @@ function validateStep(step) {
   return valid;
 }
 
-// ── Helpers ───────────────────────────────────────────────
+
 function val(id) {
   return document.getElementById(id)?.value?.trim() || '';
 }
@@ -134,7 +135,7 @@ function hideError(id) {
   document.getElementById(id)?.classList.remove('visible');
 }
 
-// ── Tipo institución ──────────────────────────────────────
+
 function selectTipo(btn, value) {
   document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
@@ -142,18 +143,18 @@ function selectTipo(btn, value) {
   hideError('err_tipo');
 }
 
-// ── Checkboxes animales ───────────────────────────────────
+
 function toggleCheck(label) {
   setTimeout(() => {
     const input = label.querySelector('input');
     label.classList.toggle('checked', input.checked);
-    // Validar si hay al menos uno
+
     const checked = document.querySelectorAll('#tiposAnimales input:checked');
     if (checked.length > 0) hideError('err_animales');
   }, 0);
 }
 
-// ── Resumen paso 4 ────────────────────────────────────────
+
 function fillResumen() {
   const animales = [...document.querySelectorAll('#tiposAnimales input:checked')]
     .map(i => i.value).join(', ') || '—';
@@ -234,15 +235,15 @@ function fillResumen() {
   `;
 }
 
-// ── Envío final ───────────────────────────────────────────
+
 function submitForm() {
-  // Aquí irá la llamada a la API: POST /centros
-  // Por ahora simula el envío
+
+
   document.getElementById('step4').classList.remove('active');
   document.getElementById('formNav').style.display = 'none';
   document.getElementById('successPanel').classList.add('visible');
 
-  // Marcar paso 4 como done
+
   document.querySelector('[data-step="4"]').classList.remove('active');
   document.querySelector('[data-step="4"]').classList.add('done');
 
