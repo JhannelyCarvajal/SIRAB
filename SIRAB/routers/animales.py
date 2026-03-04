@@ -18,7 +18,7 @@ class AnimalCreate(BaseModel):
     observaciones: str | None = None
 
 
-# ── GET todos ──────────────────────────────────────────────
+
 @router.get("/")
 async def listar_animales(conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -36,7 +36,7 @@ async def listar_animales(conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-# ── GET por id ─────────────────────────────────────────────
+
 @router.get("/{id_animal}")
 async def obtener_animal(id_animal: int, conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -57,7 +57,7 @@ async def obtener_animal(id_animal: int, conn=Depends(get_conexion)):
         return dato
 
 
-# ── POST ────────────────────────────────────────────────────
+
 @router.post("/")
 async def crear_animal(animal: AnimalCreate, conn=Depends(get_conexion)):
     try:
@@ -92,7 +92,7 @@ async def crear_animal(animal: AnimalCreate, conn=Depends(get_conexion)):
         raise HTTPException(status_code=400, detail=f"Error al registrar animal: {str(e)}")
 
 
-# ── PUT ─────────────────────────────────────────────────────
+
 @router.put("/{id_animal}")
 async def actualizar_animal(id_animal: int, animal: AnimalCreate, conn=Depends(get_conexion)):
     try:
@@ -126,7 +126,7 @@ async def actualizar_animal(id_animal: int, animal: AnimalCreate, conn=Depends(g
         raise HTTPException(status_code=400, detail=f"Error al actualizar animal: {str(e)}")
 
 
-# ── DELETE ──────────────────────────────────────────────────
+
 @router.delete("/{id_animal}")
 async def eliminar_animal(id_animal: int, conn=Depends(get_conexion)):
     try:

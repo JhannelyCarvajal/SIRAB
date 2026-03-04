@@ -13,7 +13,7 @@ class CentroCreate(BaseModel):
     email: str | None = None
 
 
-# ── GET todos ──────────────────────────────────────────────
+
 @router.get("/")
 async def listar_centros(conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -21,7 +21,7 @@ async def listar_centros(conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-# ── GET por id ─────────────────────────────────────────────
+
 @router.get("/{id_centro}")
 async def obtener_centro(id_centro: int, conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -35,7 +35,7 @@ async def obtener_centro(id_centro: int, conn=Depends(get_conexion)):
         return dato
 
 
-# ── POST ────────────────────────────────────────────────────
+
 @router.post("/")
 async def crear_centro(centro: CentroCreate, conn=Depends(get_conexion)):
     try:
@@ -62,7 +62,7 @@ async def crear_centro(centro: CentroCreate, conn=Depends(get_conexion)):
         raise HTTPException(status_code=400, detail=f"Error al crear centro: {str(e)}")
 
 
-# ── PUT ─────────────────────────────────────────────────────
+
 @router.put("/{id_centro}")
 async def actualizar_centro(id_centro: int, centro: CentroCreate, conn=Depends(get_conexion)):
     try:
@@ -91,7 +91,7 @@ async def actualizar_centro(id_centro: int, centro: CentroCreate, conn=Depends(g
         raise HTTPException(status_code=400, detail=f"Error al actualizar centro: {str(e)}")
 
 
-# ── DELETE ──────────────────────────────────────────────────
+
 @router.delete("/{id_centro}")
 async def eliminar_centro(id_centro: int, conn=Depends(get_conexion)):
     try:

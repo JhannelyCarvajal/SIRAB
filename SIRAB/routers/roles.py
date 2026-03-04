@@ -10,7 +10,7 @@ class RolCreate(BaseModel):
     descripcion: str | None = None
 
 
-# ── GET todos ──────────────────────────────────────────────
+
 @router.get("/")
 async def listar_roles(conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -18,7 +18,7 @@ async def listar_roles(conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-# ── GET por id ─────────────────────────────────────────────
+
 @router.get("/{id_rol}")
 async def obtener_rol(id_rol: int, conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -32,7 +32,7 @@ async def obtener_rol(id_rol: int, conn=Depends(get_conexion)):
         return dato
 
 
-# ── POST ────────────────────────────────────────────────────
+
 @router.post("/")
 async def crear_rol(rol: RolCreate, conn=Depends(get_conexion)):
     try:
@@ -56,7 +56,7 @@ async def crear_rol(rol: RolCreate, conn=Depends(get_conexion)):
         raise HTTPException(status_code=400, detail=f"Error al crear rol: {str(e)}")
 
 
-# ── PUT ─────────────────────────────────────────────────────
+
 @router.put("/{id_rol}")
 async def actualizar_rol(id_rol: int, rol: RolCreate, conn=Depends(get_conexion)):
     try:
@@ -81,7 +81,7 @@ async def actualizar_rol(id_rol: int, rol: RolCreate, conn=Depends(get_conexion)
         raise HTTPException(status_code=400, detail=f"Error al actualizar rol: {str(e)}")
 
 
-# ── DELETE ──────────────────────────────────────────────────
+
 @router.delete("/{id_rol}")
 async def eliminar_rol(id_rol: int, conn=Depends(get_conexion)):
     try:

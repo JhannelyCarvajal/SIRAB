@@ -13,7 +13,7 @@ class EspecieCreate(BaseModel):
     id_tipo: int
 
 
-# ── GET todos ──────────────────────────────────────────────
+
 @router.get("/")
 async def listar_especies(conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -26,7 +26,7 @@ async def listar_especies(conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-# ── GET por id ─────────────────────────────────────────────
+
 @router.get("/{id_especie}")
 async def obtener_especie(id_especie: int, conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -42,7 +42,7 @@ async def obtener_especie(id_especie: int, conn=Depends(get_conexion)):
         return dato
 
 
-# ── POST ────────────────────────────────────────────────────
+
 @router.post("/")
 async def crear_especie(especie: EspecieCreate, conn=Depends(get_conexion)):
     try:
@@ -69,7 +69,7 @@ async def crear_especie(especie: EspecieCreate, conn=Depends(get_conexion)):
         raise HTTPException(status_code=400, detail=f"Error al crear especie: {str(e)}")
 
 
-# ── PUT ─────────────────────────────────────────────────────
+
 @router.put("/{id_especie}")
 async def actualizar_especie(id_especie: int, especie: EspecieCreate, conn=Depends(get_conexion)):
     try:
@@ -98,7 +98,7 @@ async def actualizar_especie(id_especie: int, especie: EspecieCreate, conn=Depen
         raise HTTPException(status_code=400, detail=f"Error al actualizar especie: {str(e)}")
 
 
-# ── DELETE ──────────────────────────────────────────────────
+
 @router.delete("/{id_especie}")
 async def eliminar_especie(id_especie: int, conn=Depends(get_conexion)):
     try:

@@ -16,7 +16,7 @@ class PersonalCreate(BaseModel):
     estado: bool = True
 
 
-# ── GET todos ──────────────────────────────────────────────
+
 @router.get("/")
 async def listar_personal(conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -29,7 +29,7 @@ async def listar_personal(conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-# ── GET por id ─────────────────────────────────────────────
+
 @router.get("/{id_personal}")
 async def obtener_personal(id_personal: int, conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -45,7 +45,7 @@ async def obtener_personal(id_personal: int, conn=Depends(get_conexion)):
         return dato
 
 
-# ── POST ────────────────────────────────────────────────────
+
 @router.post("/")
 async def crear_personal(persona: PersonalCreate, conn=Depends(get_conexion)):
     try:
@@ -75,7 +75,7 @@ async def crear_personal(persona: PersonalCreate, conn=Depends(get_conexion)):
         raise HTTPException(status_code=400, detail=f"Error al registrar personal: {str(e)}")
 
 
-# ── PUT ─────────────────────────────────────────────────────
+
 @router.put("/{id_personal}")
 async def actualizar_personal(id_personal: int, persona: PersonalCreate, conn=Depends(get_conexion)):
     try:
@@ -107,7 +107,6 @@ async def actualizar_personal(id_personal: int, persona: PersonalCreate, conn=De
         raise HTTPException(status_code=400, detail=f"Error al actualizar personal: {str(e)}")
 
 
-# ── DELETE ──────────────────────────────────────────────────
 @router.delete("/{id_personal}")
 async def eliminar_personal(id_personal: int, conn=Depends(get_conexion)):
     try:

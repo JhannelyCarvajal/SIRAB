@@ -7,13 +7,12 @@ router = APIRouter()
 
 class UsuarioCreate(BaseModel):
     username: str
-    password_hash: str      # En producción se hashea antes de guardar (ej. bcrypt)
+    password_hash: str
     id_personal: int
     estado: bool = True
     id_rol: int
 
 
-# ── GET todos ──────────────────────────────────────────────
 @router.get("/")
 async def listar_usuarios(conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -30,7 +29,6 @@ async def listar_usuarios(conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-# ── GET por id ─────────────────────────────────────────────
 @router.get("/{id_usuario}")
 async def obtener_usuario(id_usuario: int, conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -50,7 +48,6 @@ async def obtener_usuario(id_usuario: int, conn=Depends(get_conexion)):
         return dato
 
 
-# ── POST ────────────────────────────────────────────────────
 @router.post("/")
 async def crear_usuario(usuario: UsuarioCreate, conn=Depends(get_conexion)):
     try:
@@ -77,7 +74,6 @@ async def crear_usuario(usuario: UsuarioCreate, conn=Depends(get_conexion)):
         raise HTTPException(status_code=400, detail=f"Error al crear usuario: {str(e)}")
 
 
-# ── PUT ─────────────────────────────────────────────────────
 @router.put("/{id_usuario}")
 async def actualizar_usuario(id_usuario: int, usuario: UsuarioCreate, conn=Depends(get_conexion)):
     try:
@@ -106,7 +102,6 @@ async def actualizar_usuario(id_usuario: int, usuario: UsuarioCreate, conn=Depen
         raise HTTPException(status_code=400, detail=f"Error al actualizar usuario: {str(e)}")
 
 
-# ── DELETE ──────────────────────────────────────────────────
 @router.delete("/{id_usuario}")
 async def eliminar_usuario(id_usuario: int, conn=Depends(get_conexion)):
     try:
@@ -123,4 +118,3 @@ async def eliminar_usuario(id_usuario: int, conn=Depends(get_conexion)):
     except Exception as e:
         await conn.rollback()
         raise HTTPException(status_code=400, detail=f"Error al eliminar usuario: {str(e)}")
-

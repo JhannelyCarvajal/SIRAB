@@ -16,7 +16,7 @@ class HistorialMedicoCreate(BaseModel):
     proxima_revision: date | None = None
 
 
-# ── GET por animal ─────────────────────────────────────────
+
 @router.get("/animal/{id_animal}")
 async def historial_por_animal(id_animal: int, conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -31,7 +31,7 @@ async def historial_por_animal(id_animal: int, conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-# ── GET por id ─────────────────────────────────────────────
+
 @router.get("/{id_historial}")
 async def obtener_historial(id_historial: int, conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -48,7 +48,7 @@ async def obtener_historial(id_historial: int, conn=Depends(get_conexion)):
         return dato
 
 
-# ── POST ────────────────────────────────────────────────────
+
 @router.post("/")
 async def crear_historial(historial: HistorialMedicoCreate, conn=Depends(get_conexion)):
     try:
@@ -80,7 +80,7 @@ async def crear_historial(historial: HistorialMedicoCreate, conn=Depends(get_con
         raise HTTPException(status_code=400, detail=f"Error al registrar historial médico: {str(e)}")
 
 
-# ── PUT ─────────────────────────────────────────────────────
+
 @router.put("/{id_historial}")
 async def actualizar_historial(id_historial: int, historial: HistorialMedicoCreate, conn=Depends(get_conexion)):
     try:
@@ -111,7 +111,7 @@ async def actualizar_historial(id_historial: int, historial: HistorialMedicoCrea
         raise HTTPException(status_code=400, detail=f"Error al actualizar historial médico: {str(e)}")
 
 
-# ── DELETE ──────────────────────────────────────────────────
+
 @router.delete("/{id_historial}")
 async def eliminar_historial(id_historial: int, conn=Depends(get_conexion)):
     try:
