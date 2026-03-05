@@ -12,7 +12,7 @@ app = FastAPI(
 from routers import (
     centros_rescate, tipo_especie, especies, rescates,
     personal, animales, historial_centros, historial_medico,
-    salidas, roles, usuarios,
+    salidas, roles, usuarios, reportes,
 )
 
 app.include_router(centros_rescate.router,   prefix="/centros",           tags=["Centros"])
@@ -26,6 +26,7 @@ app.include_router(historial_medico.router,  prefix="/historial-medico",  tags=[
 app.include_router(salidas.router,           prefix="/salidas",           tags=["Salidas"])
 app.include_router(roles.router,             prefix="/roles",             tags=["Roles"])
 app.include_router(usuarios.router,          prefix="/usuarios",          tags=["Usuarios"])
+app.include_router(reportes.router,          prefix="/reportes",          tags=["Reportes"])
 
 app.add_middleware(
     CORSMiddleware,
