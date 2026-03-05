@@ -3,8 +3,55 @@ let currentStep = 1;
 const totalSteps = 4;
 
 
-function nextStep() {
+document.addEventListener('DOMContentLoaded', () => {
 
+
+  const soloLetras = /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]/g;
+  ['rep_nombre', 'rep_apellido'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.setAttribute('maxlength', '60');
+    el.addEventListener('input', () => {
+      const pos = el.selectionStart;
+      el.value = el.value.replace(soloLetras, '');
+      el.setSelectionRange(pos, pos);
+    });
+  });
+
+
+  const limites = { nombre_centro: 120, ciudad: 60, rep_cargo: 60 };
+  Object.entries(limites).forEach(([id, max]) => {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('maxlength', max);
+  });
+
+
+  const nitEl = document.getElementById('nit');
+  if (nitEl) {
+    nitEl.setAttribute('maxlength', '12');
+    nitEl.setAttribute('inputmode', 'numeric');
+    nitEl.addEventListener('input', () => {
+      nitEl.value = nitEl.value.replace(/[^0-9]/g, '');
+    });
+  }
+
+
+  const soloTel = /[^0-9+\-\s]/g;
+  ['telefono', 'rep_telefono'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.setAttribute('maxlength', '15');
+    el.setAttribute('inputmode', 'tel');
+    el.addEventListener('input', () => {
+      el.value = el.value.replace(soloTel, '');
+    });
+  });
+
+});
+
+
+function nextStep() {
+  
   if (!validateStep(currentStep)) return;
   if (currentStep === totalSteps) {
     submitForm();
@@ -18,16 +65,16 @@ function prevStep() {
 }
 
 function goToStep(step) {
-
+  
   document.querySelector(`[data-step="${currentStep}"]`).classList.remove('active');
   document.querySelector(`[data-step="${currentStep}"]`).classList.add('done');
 
-
+  
   if (step < currentStep) {
     document.querySelector(`[data-step="${currentStep}"]`).classList.remove('done');
   }
 
-
+  
   document.getElementById(`step${currentStep}`).classList.remove('active');
 
   currentStep = step;
@@ -42,7 +89,7 @@ function goToStep(step) {
 
 
   if (currentStep === 4) fillResumen();
-
+  
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -73,7 +120,7 @@ function validateStep(step) {
   let valid = true;
 
   if (step === 1) {
-
+    
     if (!document.getElementById('tipo_institucion').value) {
       showError('err_tipo'); valid = false;
     } else hideError('err_tipo');
@@ -97,7 +144,7 @@ function validateStep(step) {
   }
 
   if (step === 2) {
-    if (!val('telefono')) { showError('err_telefono'); valid = false; }
+    if (!validTel('telefono')) { showError('err_telefono'); valid = false; }
     else hideError('err_telefono');
 
     if (!validEmail('email_centro')) { showError('err_email'); valid = false; }
@@ -108,10 +155,20 @@ function validateStep(step) {
   }
 
   if (step === 3) {
-    ['rep_nombre', 'rep_apellido', 'rep_cargo', 'nit'].forEach(id => {
-      if (!val(id)) { showError(`err_${id}`); valid = false; }
+
+    ['rep_nombre', 'rep_apellido'].forEach(id => {
+      const v = val(id);
+      if (!v || /\d/.test(v)) { showError(`err_${id}`); valid = false; }
       else hideError(`err_${id}`);
     });
+
+    if (!val('rep_cargo')) { showError('err_rep_cargo'); valid = false; }
+    else hideError('err_rep_cargo');
+
+
+    const nit = val('nit');
+    if (!nit || !/^\d+$/.test(nit)) { showError('err_nit'); valid = false; }
+    else hideError('err_nit');
 
     if (!validEmail('rep_email')) { showError('err_rep_email'); valid = false; }
     else hideError('err_rep_email');
@@ -127,6 +184,10 @@ function val(id) {
 function validEmail(id) {
   const v = val(id);
   return v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+function validTel(id) {
+  const v = val(id);
+  return v && /^[0-9+\-\s]{7,15}$/.test(v);
 }
 function showError(id) {
   document.getElementById(id)?.classList.add('visible');
@@ -251,3 +312,4 @@ function submitForm() {
   document.getElementById('progressText').textContent = '¡Completado!';
   document.getElementById('progressPct').textContent = '100%';
 }
+
