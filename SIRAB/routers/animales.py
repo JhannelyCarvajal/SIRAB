@@ -94,7 +94,9 @@ async def crear_animal(animal: AnimalCreate, conn=Depends(get_conexion)):
 
 
 @router.put("/{id_animal}")
-async def actualizar_animal(id_animal: int, animal: AnimalCreate, conn=Depends(get_conexion)):
+async def actualizar_animal(id_animal: int, animal: AnimalCreate, conn=Depends(get_conexion) 
+    print("Actualizando animal"))
+
     try:
         async with conn.cursor() as cursor:
             await cursor.execute("""
@@ -120,6 +122,7 @@ async def actualizar_animal(id_animal: int, animal: AnimalCreate, conn=Depends(g
             if not resultado:
                 raise HTTPException(status_code=404, detail="Animal no encontrado")
             await conn.commit()
+    
             return {"mensaje": "Animal actualizado correctamente", "id_animal": resultado["id_animal"]}
     except Exception as e:
         await conn.rollback()
