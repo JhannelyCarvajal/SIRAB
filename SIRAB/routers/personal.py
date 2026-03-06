@@ -78,6 +78,9 @@ async def crear_personal(persona: PersonalCreate, conn=Depends(get_conexion)):
 
 @router.put("/{id_personal}")
 async def actualizar_personal(id_personal: int, persona: PersonalCreate, conn=Depends(get_conexion)):
+
+    print("ACTUALIZANDO PERSONAL")
+
     try:
         async with conn.cursor() as cursor:
             await cursor.execute("""
