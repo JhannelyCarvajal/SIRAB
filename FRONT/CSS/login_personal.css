@@ -1,5 +1,5 @@
-/* ── VARIABLES ───────────────────────────────────────────── */
 :root {
+  
   --verde-profundo: #1a3a2a;
   --verde-selva:    #2d5a3d;
   --verde-musgo:    #4a7c59;
@@ -22,7 +22,7 @@ body {
   flex-direction: column;
 }
 
-/* ── NAV ─────────────────────────────────────────────────── */
+
 nav {
   padding: 1.2rem 3rem;
   display: flex; justify-content: space-between; align-items: center;
@@ -46,7 +46,7 @@ nav {
 }
 .nav-back:hover { color: var(--dorado); }
 
-/* ── FONDO CON CAPAS ─────────────────────────────────────── */
+
 .bg-layer {
   position: fixed; inset: 0; z-index: 0;
   background:
@@ -66,7 +66,7 @@ nav {
 .bg-circle:nth-child(2) { width: 400px; height: 400px; bottom: -100px; left: -100px; border-color: rgba(201,168,76,0.06); }
 .bg-circle:nth-child(3) { width: 250px; height: 250px; top: 40%; left: 20%; border-color: rgba(122,181,138,0.05); }
 
-/* ── CONTENEDOR CENTRAL ──────────────────────────────────── */
+
 .login-wrapper {
   flex: 1;
   display: flex; align-items: center; justify-content: center;
@@ -84,7 +84,7 @@ nav {
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Header de la card */
+
 .card-header { text-align: center; margin-bottom: 2.5rem; }
 .card-icon {
   width: 64px; height: 64px; border-radius: 1.2rem;
@@ -103,7 +103,7 @@ nav {
   line-height: 1.6;
 }
 
-/* ── FASES ───────────────────────────────────────────────── */
+
 .fase {
   display: none;
   animation: faseIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -115,7 +115,7 @@ nav {
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Panel de la tarjeta de formulario */
+
 .form-panel {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(122,181,138,0.15);
@@ -124,7 +124,7 @@ nav {
   backdrop-filter: blur(20px);
 }
 
-/* ── CAMPOS ──────────────────────────────────────────────── */
+
 .field { margin-bottom: 1.2rem; }
 .field label {
   display: block;
@@ -171,7 +171,7 @@ nav {
   box-shadow: 0 0 0 3px rgba(212,100,90,0.1);
 }
 
-/* Ojo para mostrar contraseña */
+
 .toggle-pass {
   position: absolute; right: 1rem; top: 50%;
   transform: translateY(-50%);
@@ -188,7 +188,7 @@ nav {
 }
 .field-error.visible { display: block; }
 
-/* ── CENTRO SELECCIONADO (badge) ─────────────────────────── */
+
 .centro-badge {
   display: flex; align-items: center; gap: 0.8rem;
   background: rgba(122,181,138,0.1);
@@ -213,7 +213,7 @@ nav {
 }
 .badge-change:hover { color: var(--dorado); }
 
-/* ── BOTONES ─────────────────────────────────────────────── */
+
 .btn {
   width: 100%; padding: 1rem;
   border-radius: 0.7rem; border: none;
@@ -237,7 +237,7 @@ nav {
 .btn-arrow { transition: transform 0.3s; }
 .btn-primary:hover .btn-arrow { transform: translateX(4px); }
 
-/* Loading spinner */
+
 .spinner {
   width: 16px; height: 16px;
   border: 2px solid rgba(26,58,42,0.3);
@@ -251,7 +251,7 @@ nav {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── MENSAJE DE ERROR GLOBAL ─────────────────────────────── */
+
 .alert {
   border-radius: 0.7rem; padding: 0.9rem 1rem;
   font-size: 0.85rem; line-height: 1.5;
@@ -269,7 +269,7 @@ nav {
   color: rgba(245,240,232,0.75);
 }
 
-/* ── SEPARADOR ───────────────────────────────────────────── */
+
 .divider {
   text-align: center; margin: 1.5rem 0;
   position: relative;
@@ -286,7 +286,7 @@ nav {
   letter-spacing: 0.1em; text-transform: uppercase;
 }
 
-/* Link a registro */
+
 .register-link {
   text-align: center; margin-top: 1.5rem;
   font-size: 0.82rem; color: rgba(245,240,232,0.4);
@@ -297,7 +297,7 @@ nav {
 }
 .register-link a:hover { color: var(--dorado); }
 
-/* ── RESPONSIVE ──────────────────────────────────────────── */
+
 @media (max-width: 520px) {
   nav { padding: 1rem 1.5rem; }
   .form-panel { padding: 1.5rem; }

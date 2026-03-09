@@ -29,7 +29,8 @@ async def login(datos: LoginRequest, conn=Depends(get_conexion)):
                    u.estado, u.id_rol,
                    r.nombre AS rol,
                    p.nombre || ' ' || COALESCE(p.paterno, '') AS nombre_personal,
-                   p.id_centro
+                   p.id_centro,
+                   p.id_personal
             FROM usuarios u
             JOIN personal p ON u.id_personal = p.id_personal
             JOIN roles    r ON u.id_rol      = r.id_rol
@@ -70,6 +71,7 @@ async def login(datos: LoginRequest, conn=Depends(get_conexion)):
             "token": "pendiente-jwt",
             "usuario": {
                 "id_usuario": usuario["id_usuario"],
+                "id_personal": usuario["id_personal"],
                 "username": usuario["username"],
                 "nombre_personal": usuario["nombre_personal"],
                 "rol": usuario["rol"],

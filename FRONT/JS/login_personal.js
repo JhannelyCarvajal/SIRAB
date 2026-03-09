@@ -38,7 +38,7 @@ async function cargarCentros() {
       return;
     }
 
-    centros.forEach(c => {
+    centros.filter(c => c.estado === 'aprobado').forEach(c => {
       const opt = document.createElement('option');
       opt.value = c.id_centro;
       opt.textContent = c.nombre;
@@ -64,14 +64,13 @@ function confirmarCentro() {
   hideError('err_centro');
 
   centroSeleccionado = {
-    id: select.value,
+    id: parseInt(select.value),
     nombre: select.options[idx].dataset.nombre || select.options[idx].text
   };
 
 
   document.getElementById('badgeNombre').textContent = centroSeleccionado.nombre;
-
-
+  
   irFase(2);
 }
 
@@ -103,10 +102,9 @@ async function iniciarSesion() {
   setLoading('btnLogin', true);
   ocultarAlerta();
 
+
   try {
-
-
-    const res = await fetch(`${API_URL}/usuarios/login`, {
+     const res = await fetch(`${API_URL}/usuarios/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -124,14 +122,12 @@ async function iniciarSesion() {
       return;
     }
 
-
-
-    sessionStorage.setItem('token',    data.token);
-    sessionStorage.setItem('usuario',  JSON.stringify(data.usuario));
-    sessionStorage.setItem('rol',      data.usuario.rol);
+    sessionStorage.setItem('token',     data.token);
+    sessionStorage.setItem('usuario',   JSON.stringify(data.usuario));
+    sessionStorage.setItem('rol',       data.usuario.rol);
     sessionStorage.setItem('id_centro', centroSeleccionado.id);
 
-
+    
     redirigirPorRol(data.usuario.rol);
 
   } catch (err) {
@@ -143,9 +139,10 @@ async function iniciarSesion() {
 
 function redirigirPorRol(rol) {
   const rutas = {
-    'Admin':       'dashboard_admin.html',
-    'Veterinario': 'dashboard_veterinario.html',
-    'Cuidador':    'dashboard_cuidador.html',
+    'Admin':         'dashboard_admin.html', 
+    'Administrador': 'dashboard_centro.html',      
+    'Veterinario':   'dashboard_veterinario.html',  
+    'Operador':      'dashboard_operador.html',
   };
   const destino = rutas[rol] || 'dashboard.html';
   window.location.href = destino;
@@ -168,12 +165,9 @@ function togglePassword() {
   }
 }
 
-function showError(id) {
-  document.getElementById(id)?.classList.add('visible');
-}
-function hideError(id) {
-  document.getElementById(id)?.classList.remove('visible');
-}
+function showError(id)  { document.getElementById(id)?.classList.add('visible'); }
+function hideError(id)  { document.getElementById(id)?.classList.remove('visible'); }
+
 function mostrarAlertaLogin(msg) {
   document.getElementById('alertaMsg').textContent = msg;
   document.getElementById('alertaLogin').classList.add('visible');

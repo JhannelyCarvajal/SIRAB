@@ -6,25 +6,82 @@
   <title>Registrar Centro — SIRAB</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="../CSS/registro_centro.css">
+
+  <style>
+    .logo {
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none;
+    }
+    .logo-mark { width: 32px; height: 32px; flex-shrink: 0; }
+    .logo-wordmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem; font-weight: 700;
+      color: var(--crema); letter-spacing: 0.06em; line-height: 1;
+    }
+    .logo-wordmark span { color: var(--dorado); }
+    .input-icon-wrap .lucide {
+      position: absolute; left: 1rem; top: 50%;
+      transform: translateY(-50%);
+      width: 16px; height: 16px;
+      stroke: rgba(26,58,42,0.4); pointer-events: none;
+    }
+    .input-icon-wrap input { padding-left: 2.6rem; }
+    .tipo-icon { display: flex; align-items: center; justify-content: center;
+      height: 2rem; margin-bottom: 0.4rem; }
+    .tipo-icon .lucide { width: 26px; height: 26px; stroke: var(--verde-musgo); }
+    .tipo-btn.selected .tipo-icon .lucide { stroke: var(--verde-selva); }
+    .checkbox-item .lucide {
+      width: 15px; height: 15px;
+      stroke: rgba(26,58,42,0.45); flex-shrink: 0;
+    }
+    .checkbox-item.checked .lucide { stroke: var(--verde-musgo); }
+    .side-tag .lucide { width: 13px; height: 13px; vertical-align: -1px; margin-right: 3px; stroke: var(--dorado); }
+    .step-item.done .step-dot .lucide { width: 14px; height: 14px; stroke: var(--crema); }
+    .success-icon { display: flex; align-items: center; justify-content: center;
+      width: 72px; height: 72px; border-radius: 50%;
+      background: rgba(90,158,111,0.12); border: 1px solid rgba(90,158,111,0.3);
+      margin: 0 auto 1rem; }
+    .success-icon .lucide { width: 36px; height: 36px; stroke: #5a9e6f; }
+    .nav-back .lucide { width: 14px; height: 14px; vertical-align: -1px; margin-right: 3px; }
+    .btn .lucide { width: 15px; height: 15px; vertical-align: -2px; flex-shrink: 0; }
+    .aviso-revision .lucide { width: 15px; height: 15px; vertical-align: -2px;
+      stroke: rgba(201,168,76,0.8); flex-shrink: 0; margin-right: 4px; }
+  </style>
 </head>
 <body>
 
 
   <nav>
-    <a href="index.html" class="logo">SIRA<span>B</span></a>
-    <a href="index.html" class="nav-back">← Volver al inicio</a>
+    <svg class="logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="17" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+        <path d="M18 28 C18 28 8 22 8 13 C8 8 13 5 18 8 C23 5 28 8 28 13 C28 22 18 28 18 28Z"
+              fill="rgba(74,124,89,0.25)" stroke="#7ab58a" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M18 27 L18 10" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+        <path d="M18 20 L13 15" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.7"/>
+        <path d="M18 20 L23 15" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.7"/>
+        <path d="M18 16 L14 12" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+        <path d="M18 16 L22 12" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+      <div class="logo-wordmark">SIRA<span>B</span></div>
+    </a>
+    <a href="index.html" class="nav-back">
+      <i data-lucide="arrow-left"></i> Volver al inicio
+    </a>
   </nav>
 
   <div class="page-wrapper">
 
-    
+
     <aside class="side-panel">
       <div class="side-deco-circle"></div>
       <div class="side-deco-circle"></div>
 
       <div class="side-content">
-        <span class="side-tag">🏛️ Registro institucional</span>
+        <span class="side-tag">
+          <i data-lucide="landmark"></i> Registro institucional
+        </span>
         <h2>Únete a la red<br><em>SIRAB</em></h2>
         <p>Registra tu centro de rescate y forma parte del sistema nacional de gestión de fauna silvestre de Bolivia.</p>
 
@@ -67,6 +124,7 @@
       </div>
     </aside>
 
+
     <main class="form-area">
 
 
@@ -93,17 +151,17 @@
           <label>Tipo de institución <span class="req">*</span></label>
           <div class="tipo-group">
             <div class="tipo-btn" onclick="selectTipo(this, 'ONG')">
-              <div class="tipo-icon">🌿</div>
+              <div class="tipo-icon"><i data-lucide="leaf"></i></div>
               <div class="tipo-label">ONG</div>
               <div class="tipo-desc">Organización sin fines de lucro</div>
             </div>
             <div class="tipo-btn" onclick="selectTipo(this, 'Institución Pública')">
-              <div class="tipo-icon">🏛️</div>
+              <div class="tipo-icon"><i data-lucide="landmark"></i></div>
               <div class="tipo-label">Institución Pública</div>
               <div class="tipo-desc">Entidad del Estado</div>
             </div>
             <div class="tipo-btn" onclick="selectTipo(this, 'Empresa Privada')">
-              <div class="tipo-icon">🏢</div>
+              <div class="tipo-icon"><i data-lucide="building-2"></i></div>
               <div class="tipo-label">Empresa Privada</div>
               <div class="tipo-desc">Organización con fines de lucro</div>
             </div>
@@ -152,33 +210,33 @@
             <div class="checkbox-group" id="tiposAnimales">
               <label class="checkbox-item" onclick="toggleCheck(this)">
                 <input type="checkbox" value="Mamíferos">
-                <span class="check-icon">✓</span>
-                🐆 Mamíferos
+                <span class="check-icon"><i data-lucide="check"></i></span>
+                <i data-lucide="paw-print"></i> Mamíferos
               </label>
               <label class="checkbox-item" onclick="toggleCheck(this)">
                 <input type="checkbox" value="Aves">
-                <span class="check-icon">✓</span>
-                🦜 Aves
+                <span class="check-icon"><i data-lucide="check"></i></span>
+                <i data-lucide="bird"></i> Aves
               </label>
               <label class="checkbox-item" onclick="toggleCheck(this)">
                 <input type="checkbox" value="Reptiles">
-                <span class="check-icon">✓</span>
-                🐊 Reptiles
+                <span class="check-icon"><i data-lucide="check"></i></span>
+                <i data-lucide="scale"></i> Reptiles
               </label>
               <label class="checkbox-item" onclick="toggleCheck(this)">
                 <input type="checkbox" value="Anfibios">
-                <span class="check-icon">✓</span>
-                🐸 Anfibios
+                <span class="check-icon"><i data-lucide="check"></i></span>
+                <i data-lucide="droplets"></i> Anfibios
               </label>
               <label class="checkbox-item" onclick="toggleCheck(this)">
                 <input type="checkbox" value="Peces">
-                <span class="check-icon">✓</span>
-                🐟 Peces
+                <span class="check-icon"><i data-lucide="check"></i></span>
+                <i data-lucide="waves"></i> Peces
               </label>
               <label class="checkbox-item" onclick="toggleCheck(this)">
                 <input type="checkbox" value="Otros">
-                <span class="check-icon">✓</span>
-                🌿 Otros
+                <span class="check-icon"><i data-lucide="check"></i></span>
+                <i data-lucide="leaf"></i> Otros
               </label>
             </div>
             <span class="field-error" id="err_animales">Selecciona al menos un tipo</span>
@@ -198,7 +256,7 @@
           <div class="field">
             <label>Teléfono institucional <span class="req">*</span></label>
             <div class="input-icon-wrap">
-              <span class="icon">📞</span>
+              <i data-lucide="phone"></i>
               <input type="tel" id="telefono" placeholder="+591 4 123-4567"/>
             </div>
             <span class="field-error" id="err_telefono">Este campo es obligatorio</span>
@@ -207,7 +265,7 @@
           <div class="field">
             <label>Email institucional <span class="req">*</span></label>
             <div class="input-icon-wrap">
-              <span class="icon">✉️</span>
+              <i data-lucide="mail"></i>
               <input type="email" id="email_centro" placeholder="contacto@micentro.org"/>
             </div>
             <span class="field-error" id="err_email">Ingresa un email válido</span>
@@ -216,7 +274,7 @@
           <div class="field span-2">
             <label>Sitio web</label>
             <div class="input-icon-wrap">
-              <span class="icon">🌐</span>
+              <i data-lucide="globe"></i>
               <input type="url" id="sitio_web" placeholder="https://www.micentro.org"/>
             </div>
           </div>
@@ -224,7 +282,7 @@
           <div class="field">
             <label>Facebook</label>
             <div class="input-icon-wrap">
-              <span class="icon">📘</span>
+              <i data-lucide="facebook"></i>
               <input type="url" id="facebook" placeholder="https://facebook.com/micentro"/>
             </div>
           </div>
@@ -232,7 +290,7 @@
           <div class="field">
             <label>Instagram</label>
             <div class="input-icon-wrap">
-              <span class="icon">📸</span>
+              <i data-lucide="instagram"></i>
               <input type="url" id="instagram" placeholder="https://instagram.com/micentro"/>
             </div>
           </div>
@@ -282,7 +340,7 @@
           <div class="field">
             <label>Teléfono del representante</label>
             <div class="input-icon-wrap">
-              <span class="icon">📱</span>
+              <i data-lucide="smartphone"></i>
               <input type="tel" id="rep_telefono" placeholder="+591 7 123-4567"/>
             </div>
           </div>
@@ -290,7 +348,7 @@
           <div class="field">
             <label>Email del representante <span class="req">*</span></label>
             <div class="input-icon-wrap">
-              <span class="icon">✉️</span>
+              <i data-lucide="mail"></i>
               <input type="email" id="rep_email" placeholder="representante@micentro.org"/>
             </div>
             <span class="field-error" id="err_rep_email">Ingresa un email válido</span>
@@ -306,15 +364,12 @@
           <p>Revisa la información antes de enviar tu solicitud.</p>
         </div>
 
+        <div class="resumen-grid" id="resumenGrid"></div>
 
-        <div class="resumen-grid" id="resumenGrid">
-        
-        </div>
-
-
-        <div style="margin-top: 1.5rem; padding: 1rem 1.2rem; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); border-radius: 0.75rem;">
-          <p style="font-size: 0.82rem; color: rgba(26,58,42,0.65); line-height: 1.7;">
-            ⏳ <strong>Tu solicitud será revisada</strong> por un superadministrador de SIRAB antes de ser aprobada. 
+        <div class="aviso-revision" style="margin-top: 1.5rem; padding: 1rem 1.2rem; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); border-radius: 0.75rem; display: flex; align-items: flex-start; gap: 0.5rem;">
+          <i data-lucide="clock"></i>
+          <p style="font-size: 0.82rem; color: rgba(26,58,42,0.65); line-height: 1.7; margin: 0;">
+            <strong>Tu solicitud será revisada</strong> por un superadministrador de SIRAB antes de ser aprobada.
             Recibirás una notificación al email institucional indicado.
           </p>
         </div>
@@ -322,21 +377,25 @@
 
 
       <div class="success-panel" id="successPanel">
-        <div class="success-icon">🌿</div>
+        <div class="success-icon">
+          <i data-lucide="leaf"></i>
+        </div>
         <h3>¡Solicitud enviada!</h3>
         <p>Tu centro ha sido registrado exitosamente. Un administrador de SIRAB revisará tu solicitud y te contactará al email proporcionado.</p>
         <span class="success-badge">✓ Pendiente de aprobación</span>
         <br><br>
-        <a href="index.html" class="btn btn-next" style="display: inline-flex; margin-top: 0.5rem;">Volver al inicio</a>
+        <a href="index.html" class="btn btn-next" style="display: inline-flex; margin-top: 0.5rem;">
+          <i data-lucide="arrow-left"></i> Volver al inicio
+        </a>
       </div>
 
 
       <div class="form-nav" id="formNav">
         <button class="btn btn-prev" id="btnPrev" onclick="prevStep()" style="visibility: hidden;">
-          ← Anterior
+          <i data-lucide="arrow-left"></i> Anterior
         </button>
         <button class="btn btn-next" id="btnNext" onclick="nextStep()">
-          Siguiente →
+          Siguiente <i data-lucide="arrow-right"></i>
         </button>
       </div>
 
@@ -344,5 +403,6 @@
   </div>
 
   <script src="../JS/registro_centro.js"></script>
+  <script>lucide.createIcons();</script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* ── VARIABLES (mismas del proyecto) ─────────────────────── */
+
 :root {
   --verde-profundo: #1a3a2a;
   --verde-selva:    #2d5a3d;
@@ -21,7 +21,7 @@ body {
   min-height: 100vh;
 }
 
-/* ── NAV ─────────────────────────────────────────────────── */
+
 nav {
   background: var(--verde-profundo);
   padding: 1.2rem 3rem;
@@ -42,14 +42,14 @@ nav {
 }
 .nav-back:hover { color: var(--dorado); }
 
-/* ── LAYOUT PRINCIPAL ────────────────────────────────────── */
+
 .page-wrapper {
   display: grid;
   grid-template-columns: 380px 1fr;
   min-height: calc(100vh - 65px);
 }
 
-/* Panel izquierdo decorativo */
+
 .side-panel {
   background: var(--verde-profundo);
   padding: 3rem 2.5rem;
@@ -92,7 +92,7 @@ nav {
   color: rgba(245,240,232,0.6); font-weight: 300;
 }
 
-/* Steps lateral */
+
 .steps-nav { position: relative; z-index: 1; margin-top: 3rem; }
 .step-item {
   display: flex; align-items: flex-start; gap: 1rem;
@@ -135,7 +135,7 @@ nav {
 .step-item.active .step-title { color: var(--crema); }
 .step-item.done .step-title { color: rgba(245,240,232,0.7); }
 
-/* Info extra lateral */
+
 .side-footer { position: relative; z-index: 1; }
 .side-note {
   background: rgba(122,181,138,0.08);
@@ -147,14 +147,14 @@ nav {
 }
 .side-note strong { color: rgba(245,240,232,0.75); }
 
-/* ── ÁREA DEL FORMULARIO ─────────────────────────────────── */
+
 .form-area {
   padding: 3rem 4rem;
   display: flex; flex-direction: column;
   max-width: 720px;
 }
 
-/* Progress bar superior */
+
 .progress-bar-wrap {
   margin-bottom: 2.5rem;
 }
@@ -174,7 +174,7 @@ nav {
 }
 .progress-label span:last-child { color: var(--dorado); font-weight: 500; }
 
-/* Step header */
+
 .step-header { margin-bottom: 2rem; }
 .step-header .num {
   font-family: 'Playfair Display', serif;
@@ -190,7 +190,7 @@ nav {
   color: rgba(26,58,42,0.55); line-height: 1.6;
 }
 
-/* Panels de pasos */
+
 .step-panel { display: none; animation: stepIn 0.4s ease both; }
 .step-panel.active { display: block; }
 
@@ -199,7 +199,7 @@ nav {
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* ── CAMPOS DEL FORMULARIO ───────────────────────────────── */
+
 .form-grid { display: grid; gap: 1.2rem; }
 .form-grid.cols-2 { grid-template-columns: 1fr 1fr; }
 .form-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
@@ -253,7 +253,7 @@ select { appearance: none; cursor: pointer;
 }
 textarea { resize: vertical; min-height: 110px; }
 
-/* Input con ícono */
+
 .input-icon-wrap { position: relative; }
 .input-icon-wrap .icon {
   position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
@@ -261,7 +261,7 @@ textarea { resize: vertical; min-height: 110px; }
 }
 .input-icon-wrap input { padding-left: 2.5rem; }
 
-/* Checkboxes de tipos de animales */
+
 .checkbox-group {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem;
   margin-top: 0.2rem;
@@ -292,7 +292,7 @@ textarea { resize: vertical; min-height: 110px; }
   color: white;
 }
 
-/* Tipo institución botones */
+
 .tipo-group {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem;
 }
@@ -311,7 +311,7 @@ textarea { resize: vertical; min-height: 110px; }
 .tipo-btn .tipo-desc { font-size: 0.72rem; color: rgba(26,58,42,0.5); margin-top: 0.2rem; }
 input[name="tipo_institucion"] { display: none; }
 
-/* ── PASO 4: RESUMEN ─────────────────────────────────────── */
+
 .resumen-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
 }
@@ -329,7 +329,7 @@ input[name="tipo_institucion"] { display: none; }
 .resumen-item .rlabel { font-size: 0.75rem; color: rgba(26,58,42,0.5); }
 .resumen-item .rval { font-size: 0.88rem; color: var(--verde-profundo); font-weight: 500; }
 
-/* Mensaje de éxito */
+
 .success-panel {
   display: none; text-align: center; padding: 2rem 1rem;
 }
@@ -348,7 +348,7 @@ input[name="tipo_institucion"] { display: none; }
   padding: 0.5rem 1.2rem; font-size: 0.82rem; font-weight: 500;
 }
 
-/* ── NAVEGACIÓN ENTRE PASOS ──────────────────────────────── */
+
 .form-nav {
   display: flex; justify-content: space-between; align-items: center;
   margin-top: 2.5rem; padding-top: 2rem;
@@ -392,7 +392,7 @@ input[name="tipo_institucion"] { display: none; }
 }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
-/* ── RESPONSIVE ──────────────────────────────────────────── */
+
 @media (max-width: 1024px) {
   .page-wrapper { grid-template-columns: 1fr; }
   .side-panel { display: none; }

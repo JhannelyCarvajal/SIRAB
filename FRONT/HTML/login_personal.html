@@ -6,7 +6,50 @@
   <title>Acceso Personal — SIRAB</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="../CSS/login_personal.css">
+
+  <style>
+    .logo {
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none;
+    }
+    .logo-mark { width: 32px; height: 32px; flex-shrink: 0; }
+    .logo-wordmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem; font-weight: 700;
+      color: var(--crema); letter-spacing: 0.06em; line-height: 1;
+    }
+    .logo-wordmark span { color: var(--dorado); }
+
+    .nav-back .lucide { width: 14px; height: 14px; vertical-align: -1px; margin-right: 3px; }
+
+    .card-icon {
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-icon .lucide { width: 32px; height: 32px; stroke: var(--verde-claro); }
+
+    .iicon {
+      position: absolute; left: 1rem; top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none; opacity: 0.5;
+      display: flex; align-items: center;
+    }
+    .iicon .lucide { width: 16px; height: 16px; stroke: var(--crema); }
+
+    .toggle-pass .lucide { width: 16px; height: 16px; stroke: rgba(245,240,232,0.4); }
+    .toggle-pass:hover .lucide { stroke: var(--verde-claro); }
+
+    .badge-icon { display: flex; align-items: center; }
+    .badge-icon .lucide { width: 20px; height: 20px; stroke: var(--verde-claro); }
+
+    .alert-icon { display: flex; align-items: center; flex-shrink: 0; }
+    .alert-warning .alert-icon .lucide { width: 16px; height: 16px; stroke: rgba(245,240,232,0.75); }
+    .alert-error .alert-icon .lucide   { width: 16px; height: 16px; stroke: #f0a09a; }
+
+    .btn .lucide { width: 16px; height: 16px; vertical-align: -2px; flex-shrink: 0; transition: transform 0.3s; }
+    .btn:hover .lucide { transform: translateX(4px); }
+  </style>
 </head>
 <body>
 
@@ -18,15 +61,31 @@
   </div>
 
   <nav>
-    <a href="index.html" class="logo">SIRA<span>B</span></a>
-    <a href="index.html" class="nav-back">← Volver al inicio</a>
+    <a href="index.html" class="logo">
+      <svg class="logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="17" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+        <path d="M18 28 C18 28 8 22 8 13 C8 8 13 5 18 8 C23 5 28 8 28 13 C28 22 18 28 18 28Z"
+              fill="rgba(74,124,89,0.25)" stroke="#7ab58a" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M18 27 L18 10" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+        <path d="M18 20 L13 15" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.7"/>
+        <path d="M18 20 L23 15" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.7"/>
+        <path d="M18 16 L14 12" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+        <path d="M18 16 L22 12" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+      <div class="logo-wordmark">SIRA<span>B</span></div>
+    </a>
+    <a href="index.html" class="nav-back">
+      <i data-lucide="arrow-left"></i> Volver al inicio
+    </a>
   </nav>
 
   <div class="login-wrapper">
     <div class="login-card">
 
       <div class="card-header">
-        <div class="card-icon">🌿</div>
+        <div class="card-icon">
+          <i data-lucide="shield-check"></i>
+        </div>
         <h2>Acceso al sistema</h2>
         <p>Ingresa con las credenciales asignadas por el administrador de tu centro.</p>
       </div>
@@ -35,13 +94,14 @@
         <div class="form-panel">
 
           <div class="alert alert-warning" id="alertaCentros">
-            ⚠️ No se pudieron cargar los centros. Verifica tu conexión.
+            <span class="alert-icon"><i data-lucide="alert-triangle"></i></span>
+            No se pudieron cargar los centros. Verifica tu conexión.
           </div>
 
           <div class="field">
             <label>Selecciona tu centro <span class="req">*</span></label>
             <div class="input-wrap">
-              <span class="iicon">🏛️</span>
+              <span class="iicon"><i data-lucide="landmark"></i></span>
               <select id="selectCentro">
                 <option value="">Cargando centros...</option>
               </select>
@@ -50,7 +110,9 @@
           </div>
 
           <button class="btn btn-primary" id="btnCentro" onclick="confirmarCentro()">
-            <span class="btn-text">Continuar <span class="btn-arrow">→</span></span>
+            <span class="btn-text">
+              Continuar <i data-lucide="arrow-right"></i>
+            </span>
             <div class="spinner"></div>
           </button>
         </div>
@@ -65,7 +127,7 @@
         <div class="form-panel">
 
           <div class="centro-badge">
-            <span class="badge-icon">🏛️</span>
+            <span class="badge-icon"><i data-lucide="landmark"></i></span>
             <div class="badge-info">
               <div class="badge-label">Centro seleccionado</div>
               <div class="badge-nombre" id="badgeNombre">—</div>
@@ -74,13 +136,14 @@
           </div>
 
           <div class="alert alert-error" id="alertaLogin">
-            🚫 <span id="alertaMsg">Usuario o contraseña incorrectos.</span>
+            <span class="alert-icon"><i data-lucide="x-circle"></i></span>
+            <span id="alertaMsg">Usuario o contraseña incorrectos.</span>
           </div>
 
           <div class="field">
             <label>Usuario <span class="req">*</span></label>
             <div class="input-wrap">
-              <span class="iicon">👤</span>
+              <span class="iicon"><i data-lucide="user"></i></span>
               <input type="text" id="username" placeholder="Tu nombre de usuario" autocomplete="username"/>
             </div>
             <span class="field-error" id="err_usuario">Este campo es obligatorio</span>
@@ -89,15 +152,19 @@
           <div class="field">
             <label>Contraseña <span class="req">*</span></label>
             <div class="input-wrap">
-              <span class="iicon">🔒</span>
+              <span class="iicon"><i data-lucide="lock"></i></span>
               <input type="password" id="password" placeholder="••••••••" autocomplete="current-password"/>
-              <button class="toggle-pass" type="button" onclick="togglePassword()" id="toggleBtn">👁</button>
+              <button class="toggle-pass" type="button" onclick="togglePassword()" id="toggleBtn">
+                <i data-lucide="eye" id="eyeIcon"></i>
+              </button>
             </div>
             <span class="field-error" id="err_password">Este campo es obligatorio</span>
           </div>
 
           <button class="btn btn-primary" id="btnLogin" onclick="iniciarSesion()">
-            <span class="btn-text">Ingresar al sistema <span class="btn-arrow">→</span></span>
+            <span class="btn-text">
+              Ingresar al sistema <i data-lucide="arrow-right"></i>
+            </span>
             <div class="spinner"></div>
           </button>
 
@@ -108,5 +175,21 @@
   </div>
 
   <script src="../JS/login_personal.js"></script>
+  <script>
+    lucide.createIcons();
+
+    const _orig = window.togglePassword;
+    window.togglePassword = function() {
+      const input = document.getElementById('password');
+      const isPass = input.type === 'password';
+      input.type = isPass ? 'text' : 'password';
+
+      const btn = document.getElementById('toggleBtn');
+      btn.innerHTML = isPass
+        ? '<i data-lucide="eye-off"></i>'
+        : '<i data-lucide="eye"></i>';
+      lucide.createIcons();
+    };
+  </script>
 </body>
 </html>

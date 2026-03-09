@@ -1,3 +1,4 @@
+import bcrypt
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from config.conexionDB import get_conexion
@@ -14,6 +15,7 @@ class PersonalCreate(BaseModel):
     email: str | None = None
     id_centro: int
     estado: bool = True
+    password: str | None = None   # opcional — se hashea si viene, si no se guarda 'no-aplica'
 
 
 
@@ -51,8 +53,8 @@ async def crear_personal(persona: PersonalCreate, conn=Depends(get_conexion)):
     try:
         async with conn.cursor() as cursor:
             await cursor.execute("""
-                INSERT INTO personal (nombre, paterno, materno, cargo, telefono, email, id_centro, estado)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO personal (nombre, paterno, materno, cargo, telefono, email, id_centro, estado, password)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING id_personal
             """, (
                 persona.nombre,
@@ -62,7 +64,9 @@ async def crear_personal(persona: PersonalCreate, conn=Depends(get_conexion)):
                 persona.telefono,
                 persona.email,
                 persona.id_centro,
-                persona.estado
+                persona.estado,
+                bcrypt.hashpw(persona.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+                if persona.password else 'no-aplica'
             ))
             nuevo_id = await cursor.fetchone()
             await conn.commit()
@@ -78,18 +82,19 @@ async def crear_personal(persona: PersonalCreate, conn=Depends(get_conexion)):
 
 @router.put("/{id_personal}")
 async def actualizar_personal(id_personal: int, persona: PersonalCreate, conn=Depends(get_conexion)):
-
-    print("ACTUALIZANDO PERSONAL")
-
     try:
         async with conn.cursor() as cursor:
             await cursor.execute("""
+                -- Actualizar password solo si viene en el body
                 UPDATE personal
                 SET nombre = %s, paterno = %s, materno = %s, cargo = %s,
                     telefono = %s, email = %s, id_centro = %s, estado = %s
+                    {password_set}
                 WHERE id_personal = %s
                 RETURNING id_personal
-            """, (
+            """.format(
+                password_set=', password = %s' if persona.password else ''
+            ), (
                 persona.nombre,
                 persona.paterno,
                 persona.materno,
@@ -98,6 +103,8 @@ async def actualizar_personal(id_personal: int, persona: PersonalCreate, conn=De
                 persona.email,
                 persona.id_centro,
                 persona.estado,
+                *([bcrypt.hashpw(persona.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')]
+                  if persona.password else []),
                 id_personal
             ))
             resultado = await cursor.fetchone()

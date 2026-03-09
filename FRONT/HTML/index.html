@@ -6,14 +6,138 @@
   <title>SIRAB — Sistema de Rescate Animal de Bolivia</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="../CSS/index.css">
+
+  <style>
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      text-decoration: none;
+      cursor: default;
+    }
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    .logo-wordmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--crema);
+      letter-spacing: 0.06em;
+      line-height: 1;
+    }
+    .logo-wordmark span { color: var(--dorado); }
+
+
+    .lucide {
+      display: inline-block;
+      vertical-align: middle;
+      stroke-width: 1.6;
+    }
+
+
+    .hero-tag .lucide {
+      width: 14px; height: 14px;
+      margin-right: 4px;
+      vertical-align: -1px;
+    }
+
+
+    .fact-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px; height: 44px;
+      border-radius: 0.75rem;
+      background: rgba(74,124,89,0.1);
+      margin-bottom: 0.8rem;
+    }
+    .fact-icon .lucide {
+      width: 22px; height: 22px;
+      stroke: var(--verde-musgo);
+    }
+
+
+    .tag .lucide {
+      width: 13px; height: 13px;
+      vertical-align: -1px;
+      margin-right: 3px;
+      stroke: var(--verde-selva);
+    }
+
+    .card-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-centro .card-icon .lucide  { stroke: var(--verde-claro); width: 28px; height: 28px; }
+    .card-personal .card-icon .lucide { stroke: var(--dorado); width: 28px; height: 28px; }
+
+
+    .card-link .lucide {
+      width: 15px; height: 15px;
+      vertical-align: -2px;
+      transition: transform 0.3s;
+    }
+    .card-acceso:hover .card-link .lucide { transform: translateX(5px); }
+
+
+    .btn .lucide {
+      width: 16px; height: 16px;
+      vertical-align: -2px;
+      transition: transform 0.3s;
+      flex-shrink: 0;
+    }
+    .btn:hover .lucide { transform: translateX(4px); }
+    .btn-secondary:hover .lucide { transform: translateY(3px); }
+
+
+    nav a .lucide {
+      width: 14px; height: 14px;
+      vertical-align: -1px;
+      margin-left: 4px;
+      opacity: 0.7;
+    }
+
+
+    .scroll-hint .lucide {
+      width: 16px; height: 16px;
+      stroke: rgba(245,240,232,0.4);
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(4px); }
+    }
+  </style>
 </head>
 <body>
 
 
   <nav>
-    <div class="logo">SIRA<span>B</span></div>
-    <a href="#acceso">Ingresar al sistema </a>
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="18" cy="18" r="17" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+        <path d="M18 28 C18 28 8 22 8 13 C8 8 13 5 18 8 C23 5 28 8 28 13 C28 22 18 28 18 28Z"
+              fill="rgba(74,124,89,0.25)" stroke="#7ab58a" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M18 27 L18 10" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+        <path d="M18 20 L13 15" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.7"/>
+        <path d="M18 20 L23 15" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.7"/>
+        <path d="M18 16 L14 12" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+        <path d="M18 16 L22 12" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+      <div class="logo-wordmark">SIRA<span>B</span></div>
+    </div>
+
+    <a href="#acceso">
+      Ingresar al sistema
+      <i data-lucide="arrow-right"></i>
+    </a>
   </nav>
 
   <section class="hero">
@@ -22,8 +146,13 @@
     <div class="hero-circle"></div>
 
     <div class="hero-content">
-      <span class="hero-tag">🌿 Bolivia · Fauna Silvestre</span>
+      <span class="hero-tag">
+        <i data-lucide="leaf"></i>
+        Bolivia · Fauna Silvestre
+      </span>
+
       <h1>Protegiendo la<br><em>vida silvestre</em><br>de Bolivia</h1>
+
       <p class="hero-desc">
         SIRAB es el sistema integrado de gestión para centros de rescate de fauna silvestre en Bolivia.
         Coordinamos el rescate, rehabilitación y seguimiento de animales en todo el territorio nacional.
@@ -39,20 +168,26 @@
           <span class="stat-label">Especies registradas</span>
         </div>
         <div class="stat-item">
-          <span class="stat-num">9</span>
+          <span class="stat-num">5</span>
           <span class="stat-label">Departamentos</span>
         </div>
       </div>
 
       <div class="cta-group">
-        <a href="#acceso" class="btn btn-primary">Acceder al sistema <span class="btn-arrow">→</span></a>
-        <a href="#que-es" class="btn btn-secondary">Conocer más <span class="btn-arrow">↓</span></a>
+        <a href="#acceso" class="btn btn-primary">
+          Acceder al sistema
+          <i data-lucide="arrow-right"></i>
+        </a>
+        <a href="#que-es" class="btn btn-secondary">
+          Conocer más
+          <i data-lucide="chevron-down"></i>
+        </a>
       </div>
     </div>
 
     <div class="scroll-hint">
       <div class="scroll-line"></div>
-      <span>Scroll</span>
+      <i data-lucide="chevrons-down"></i>
     </div>
   </section>
 
@@ -68,38 +203,48 @@
         SIRAB centraliza la información de todos los centros de rescate del país: animales,
         historiales médicos, personal, rescates y más — todo en un solo lugar, accesible y seguro.
       </p>
+
       <div class="tag-list">
-        <span class="tag">🐆 Mamíferos</span>
-        <span class="tag">🦜 Aves</span>
-        <span class="tag">🐊 Reptiles</span>
-        <span class="tag">🐸 Anfibios</span>
-        <span class="tag">🌿 Fauna silvestre</span>
+        <span class="tag"><i data-lucide="paw-print"></i> Mamíferos</span>
+        <span class="tag"><i data-lucide="bird"></i> Aves</span>
+        <span class="tag"><i data-lucide="scale"></i> Reptiles</span>
+        <span class="tag"><i data-lucide="droplets"></i> Anfibios</span>
+        <span class="tag"><i data-lucide="leaf"></i> Fauna silvestre</span>
       </div>
     </div>
 
     <div class="facts-grid reveal">
       <div class="fact-card">
-        <div class="fact-icon">🏥</div>
+        <div class="fact-icon">
+          <i data-lucide="stethoscope"></i>
+        </div>
         <h4>Gestión médica</h4>
         <p>Historial clínico completo por animal con seguimiento de tratamientos.</p>
       </div>
       <div class="fact-card">
-        <div class="fact-icon">📍</div>
+        <div class="fact-icon">
+          <i data-lucide="route"></i>
+        </div>
         <h4>Trazabilidad</h4>
         <p>Registro de traslados entre centros y salidas (liberación, adopción, decomiso).</p>
       </div>
       <div class="fact-card">
-        <div class="fact-icon">👥</div>
+        <div class="fact-icon">
+          <i data-lucide="users"></i>
+        </div>
         <h4>Gestión de personal</h4>
         <p>Control de roles, accesos y responsabilidades por centro.</p>
       </div>
       <div class="fact-card">
-        <div class="fact-icon">📊</div>
+        <div class="fact-icon">
+          <i data-lucide="bar-chart-2"></i>
+        </div>
         <h4>Reportes</h4>
         <p>Estadísticas y datos por especie, departamento y período.</p>
       </div>
     </div>
   </section>
+
 
   <section class="section-conciencia">
     <h2 class="reveal">Las amenazas son <em>reales</em> y urgentes</h2>
@@ -127,6 +272,7 @@
     </div>
   </section>
 
+
   <section class="section-acceso" id="acceso">
     <p class="label reveal">Sistema de gestión</p>
     <h2 class="reveal">¿Cómo deseas <em>ingresar</em>?</h2>
@@ -134,23 +280,47 @@
 
     <div class="cards-acceso">
       <a href="registro_centro.html" class="card-acceso card-centro reveal">
-        <div class="card-icon">🏛️</div>
+        <div class="card-icon">
+          <i data-lucide="landmark"></i>
+        </div>
         <h3>Registrar un Centro</h3>
         <p>¿Diriges o representas un centro de rescate de fauna silvestre? Registra tu institución para formar parte de la red SIRAB.</p>
-        <span class="card-link">Registrar centro </span>
+        <span class="card-link">
+          Registrar centro
+          <i data-lucide="arrow-right"></i>
+        </span>
       </a>
+
       <a href="login_personal.html" class="card-acceso card-personal reveal">
-        <div class="card-icon">👤</div>
+        <div class="card-icon">
+          <i data-lucide="user-circle"></i>
+        </div>
         <h3>Soy Personal de un Centro</h3>
         <p>Si ya formas parte del equipo de un centro registrado, accede con tus credenciales asignadas por tu administrador.</p>
-        <span class="card-link">Iniciar sesión </span>
+        <span class="card-link">
+          Iniciar sesión
+          <i data-lucide="arrow-right"></i>
+        </span>
       </a>
     </div>
   </section>
 
 
   <footer>
-    <div class="logo">SIRA<span>B</span></div>
+
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="18" cy="18" r="17" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <path d="M18 28 C18 28 8 22 8 13 C8 8 13 5 18 8 C23 5 28 8 28 13 C28 22 18 28 18 28Z"
+              fill="rgba(74,124,89,0.2)" stroke="#7ab58a" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M18 27 L18 10" stroke="#c9a84c" stroke-width="1" stroke-linecap="round"/>
+        <path d="M18 20 L13 15" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.7"/>
+        <path d="M18 20 L23 15" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.7"/>
+        <path d="M18 16 L14 12" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+        <path d="M18 16 L22 12" stroke="#7ab58a" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+      <div class="logo-wordmark">SIRA<span>B</span></div>
+    </div>
     <p>© 2026 Sistema de Rescate Animal de Bolivia</p>
     <div class="footer-links">
       <a href="#">Política de privacidad</a>
@@ -159,5 +329,8 @@
   </footer>
 
   <script src="../JS/index.js"></script>
+
+
+  <script>lucide.createIcons();</script>
 </body>
 </html>

@@ -13,6 +13,14 @@ class CentroCreate(BaseModel):
     email: str | None = None
 
 
+class CentroUpdate(BaseModel):
+    nombre: str
+    departamento: str
+    direccion: str | None = None
+    telefono: str | None = None
+    email: str | None = None
+    estado: str | None = None
+
 
 @router.get("/")
 async def listar_centros(conn=Depends(get_conexion)):
@@ -64,28 +72,50 @@ async def crear_centro(centro: CentroCreate, conn=Depends(get_conexion)):
 
 
 @router.put("/{id_centro}")
-async def actualizar_centro(id_centro: int, centro: CentroCreate, conn=Depends(get_conexion)):
+async def actualizar_centro(id_centro: int, centro: CentroUpdate, conn=Depends(get_conexion)):
     try:
         async with conn.cursor() as cursor:
-            await cursor.execute("""
-                UPDATE centros_rescate
-                SET nombre = %s, departamento = %s, direccion = %s,
-                    telefono = %s, email = %s
-                WHERE id_centro = %s
-                RETURNING id_centro
-            """, (
-                centro.nombre,
-                centro.departamento,
-                centro.direccion,
-                centro.telefono,
-                centro.email,
-                id_centro
-            ))
+
+            if centro.estado is not None:
+                await cursor.execute("""
+                    UPDATE centros_rescate
+                    SET nombre = %s, departamento = %s, direccion = %s,
+                        telefono = %s, email = %s, estado = %s
+                    WHERE id_centro = %s
+                    RETURNING id_centro
+                """, (
+                    centro.nombre,
+                    centro.departamento,
+                    centro.direccion,
+                    centro.telefono,
+                    centro.email,
+                    centro.estado,
+                    id_centro
+                ))
+            else:
+                await cursor.execute("""
+                    UPDATE centros_rescate
+                    SET nombre = %s, departamento = %s, direccion = %s,
+                        telefono = %s, email = %s
+                    WHERE id_centro = %s
+                    RETURNING id_centro
+                """, (
+                    centro.nombre,
+                    centro.departamento,
+                    centro.direccion,
+                    centro.telefono,
+                    centro.email,
+                    id_centro
+                ))
+
             resultado = await cursor.fetchone()
             if not resultado:
                 raise HTTPException(status_code=404, detail="Centro de rescate no encontrado")
             await conn.commit()
-            return {"mensaje": "Centro actualizado correctamente", "id_centro": resultado["id_centro"]}
+            return {
+                "mensaje": "Centro actualizado correctamente",
+                "id_centro": resultado["id_centro"]
+            }
     except Exception as e:
         await conn.rollback()
         raise HTTPException(status_code=400, detail=f"Error al actualizar centro: {str(e)}")
@@ -104,7 +134,10 @@ async def eliminar_centro(id_centro: int, conn=Depends(get_conexion)):
             if not eliminado:
                 raise HTTPException(status_code=404, detail="Centro de rescate no encontrado")
             await conn.commit()
-            return {"mensaje": "Centro eliminado correctamente", "id_centro": eliminado["id_centro"]}
+            return {
+                "mensaje": "Centro eliminado correctamente",
+                "id_centro": eliminado["id_centro"]
+            }
     except Exception as e:
         await conn.rollback()
         raise HTTPException(status_code=400, detail=f"Error al eliminar centro: {str(e)}")
