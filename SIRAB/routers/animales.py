@@ -18,7 +18,6 @@ class AnimalCreate(BaseModel):
     observaciones: str | None = None
 
 
-
 @router.get("/")
 async def listar_animales(conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -34,7 +33,6 @@ async def listar_animales(conn=Depends(get_conexion)):
             ORDER BY a.fecha_ingreso DESC
         """)
         return await cursor.fetchall()
-
 
 
 @router.get("/{id_animal}")
@@ -55,7 +53,6 @@ async def obtener_animal(id_animal: int, conn=Depends(get_conexion)):
         if not dato:
             raise HTTPException(status_code=404, detail="Animal no encontrado")
         return dato
-
 
 
 @router.post("/")
@@ -92,11 +89,8 @@ async def crear_animal(animal: AnimalCreate, conn=Depends(get_conexion)):
         raise HTTPException(status_code=400, detail=f"Error al registrar animal: {str(e)}")
 
 
-
 @router.put("/{id_animal}")
-async def actualizar_animal(id_animal: int, animal: AnimalCreate, conn=Depends(get_conexion) 
-    print("Actualizando animal"))
-
+async def actualizar_animal(id_animal: int, animal: AnimalCreate, conn=Depends(get_conexion)):
     try:
         async with conn.cursor() as cursor:
             await cursor.execute("""
@@ -122,12 +116,10 @@ async def actualizar_animal(id_animal: int, animal: AnimalCreate, conn=Depends(g
             if not resultado:
                 raise HTTPException(status_code=404, detail="Animal no encontrado")
             await conn.commit()
-    
             return {"mensaje": "Animal actualizado correctamente", "id_animal": resultado["id_animal"]}
     except Exception as e:
         await conn.rollback()
         raise HTTPException(status_code=400, detail=f"Error al actualizar animal: {str(e)}")
-
 
 
 @router.delete("/{id_animal}")
