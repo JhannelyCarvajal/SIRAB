@@ -18,28 +18,6 @@
       margin-left: 0.5rem;
       vertical-align: middle;
     }
-    #editPerfil { display: none; }
-    .perfil-acciones { display: flex; gap: 0.7rem; margin-top: 1rem; }
-    .btn-editar-perfil {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      padding: 0.5rem 1.1rem;
-      background: var(--vet-bg); color: var(--vet-suave);
-      border: 1px solid var(--vet-borde); border-radius: 0.7rem;
-      font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
-      font-weight: 600; cursor: pointer; transition: all 0.2s;
-    }
-    .btn-editar-perfil .lucide { width: 13px; height: 13px; }
-    .btn-editar-perfil:hover { background: rgba(196,113,74,0.22); }
-    .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .edit-seccion-titulo {
-      font-size: 0.68rem; font-weight: 700; color: rgba(245,240,232,0.3);
-      text-transform: uppercase; letter-spacing: 0.12em;
-      grid-column: 1 / -1; margin-top: 0.5rem;
-    }
-    .edit-password-note {
-      font-size: 0.72rem; color: rgba(245,240,232,0.3);
-      grid-column: 1 / -1; margin-top: -0.3rem;
-    }
   </style>
 </head>
 <body>
@@ -87,11 +65,6 @@
     <div class="nav-item" onclick="mostrarSeccion('rescates', this)">
       <span class="nav-icon"><i data-lucide="map-pin"></i></span> Rescates
     </div>
-
-    <div class="nav-section">Cuenta</div>
-    <div class="nav-item" onclick="mostrarSeccion('perfil', this)">
-      <span class="nav-icon"><i data-lucide="user"></i></span> Mi perfil
-    </div>
   </nav>
 
   <div class="sidebar-footer">
@@ -110,6 +83,7 @@
     <div class="topbar-date" id="topbarFecha"></div>
   </div>
 
+  <!-- ══ RESUMEN ══════════════════════════════════════════ -->
   <section class="seccion active" id="sec-resumen">
     <div class="stats-grid">
       <div class="stat-card">
@@ -175,6 +149,7 @@
     </div>
   </section>
 
+  <!-- ══ ANIMALES ══════════════════════════════════════════ -->
   <section class="seccion" id="sec-animales">
     <div class="panel">
       <div class="panel-header">
@@ -196,6 +171,7 @@
     </div>
   </section>
 
+  <!-- ══ HISTORIAL ══════════════════════════════════════════ -->
   <section class="seccion" id="sec-historial">
     <div class="panel">
       <div class="panel-header">
@@ -220,6 +196,7 @@
     </div>
   </section>
 
+  <!-- ══ RESCATES ══════════════════════════════════════════ -->
   <section class="seccion" id="sec-rescates">
     <div class="panel">
       <div class="panel-header">
@@ -230,7 +207,7 @@
           <thead>
             <tr>
               <th>#</th><th>Fecha</th><th>Tipo incidente</th>
-              <th>Ubicación</th><th>Especie reportada</th><th>Estado</th>
+              <th>Ubicación</th><th>Especie</th><th>Estado animal</th>
             </tr>
           </thead>
           <tbody id="tablaRescates">
@@ -241,91 +218,9 @@
     </div>
   </section>
 
-  <section class="seccion" id="sec-perfil">
-    <div id="vistaPerfil">
-      <div class="perfil-card">
-        <div class="perfil-avatar-grande">
-          <i data-lucide="stethoscope"></i>
-        </div>
-        <div>
-          <div class="perfil-nombre" id="perfilNombreCompleto">Cargando...</div>
-          <div class="perfil-cargo" id="perfilCargo">—</div>
-          <div id="perfilEstado"></div>
-          <div class="perfil-datos">
-            <div class="perfil-dato">
-              <label>Centro</label>
-              <span id="perfilCentro">—</span>
-            </div>
-            <div class="perfil-dato">
-              <label>Email</label>
-              <span id="perfilEmail">—</span>
-            </div>
-            <div class="perfil-dato">
-              <label>Teléfono</label>
-              <span id="perfilTelefono">—</span>
-            </div>
-            <div class="perfil-dato">
-              <label>Rol en sistema</label>
-              <span>Veterinario</span>
-            </div>
-          </div>
-          <div class="perfil-acciones">
-            <button class="btn-editar-perfil" onclick="activarEdicionPerfil()">
-              <i data-lucide="pencil"></i> Editar perfil
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="editPerfil">
-      <div class="panel">
-        <div class="panel-header">
-          <h3>Editar perfil</h3>
-        </div>
-        <div class="modal-body" style="padding:1.5rem;">
-          <div class="edit-grid">
-            <div class="edit-seccion-titulo">Datos personales</div>
-            <div class="form-field">
-              <label>Nombre</label>
-              <input type="text" id="editNombre" placeholder="Tu nombre"/>
-            </div>
-            <div class="form-field">
-              <label>Apellido paterno</label>
-              <input type="text" id="editPaterno" placeholder="Apellido paterno"/>
-            </div>
-            <div class="form-field">
-              <label>Apellido materno</label>
-              <input type="text" id="editMaterno" placeholder="Apellido materno"/>
-            </div>
-            <div class="form-field">
-              <label>Email</label>
-              <input type="email" id="editEmail" placeholder="tu@email.com"/>
-            </div>
-            <div class="form-field">
-              <label>Teléfono</label>
-              <input type="text" id="editTelefono" placeholder="+591 7 000-0000"/>
-            </div>
-            <div class="edit-seccion-titulo">Cambiar contraseña</div>
-            <div class="form-field">
-              <label>Nueva contraseña</label>
-              <input type="password" id="editPassword" placeholder="Dejar vacío para no cambiar"/>
-            </div>
-            <div class="edit-password-note">Dejar vacío si no deseas cambiar tu contraseña.</div>
-          </div>
-          <div style="display:flex;gap:0.8rem;justify-content:flex-end;margin-top:1.5rem;">
-            <button class="btn-secondary" onclick="cancelarEdicionPerfil()">Cancelar</button>
-            <button class="btn-primary" onclick="guardarPerfil()">
-              <i data-lucide="save"></i> Guardar cambios
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </section>
 </main>
 
+<!-- ══ MODAL VER ANIMAL ══════════════════════════════════ -->
 <div class="modal-overlay" id="modalVerAnimal">
   <div class="modal modal-lg">
     <div class="modal-header">
@@ -359,6 +254,7 @@
   </div>
 </div>
 
+<!-- ══ MODAL ACTUALIZAR ESTADO ════════════════════════════ -->
 <div class="modal-overlay" id="modalEstado">
   <div class="modal">
     <div class="modal-header">
@@ -396,6 +292,7 @@
   </div>
 </div>
 
+<!-- ══ MODAL NUEVO REGISTRO MÉDICO ════════════════════════ -->
 <div class="modal-overlay" id="modalHistorial">
   <div class="modal">
     <div class="modal-header">
@@ -423,12 +320,12 @@
         </select>
       </div>
       <div class="form-field">
-        <label>Diagnóstico</label>
+        <label>Diagnóstico <span style="color:var(--vet-suave)">*</span></label>
         <textarea id="hDiagnostico" placeholder="Descripción del diagnóstico..."></textarea>
       </div>
       <div class="form-field">
         <label>Tratamiento</label>
-        <textarea id="hTratamiento" placeholder="Tratamiento indicado..."></textarea>
+        <textarea id="hTratamiento" placeholder="Tratamiento indicado (opcional)..."></textarea>
       </div>
       <div class="form-field">
         <label>Próxima revisión</label>

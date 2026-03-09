@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Panel Superadmin — SIRAB</title>
+  <title>Superadmin — SIRAB</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../CSS/dashboard_admin.css">
@@ -13,7 +13,10 @@
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-text">SIRA<span>B</span></div>
-    <div class="logo-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Superadmin</div>
+    <div class="logo-badge">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Superadmin
+    </div>
   </div>
 
   <div class="sidebar-profile">
@@ -39,14 +42,9 @@
       <span class="nav-badge" id="badgePendientes">0</span>
     </div>
 
-    <div class="nav-section">Clínico</div>
-    <div class="nav-item" onclick="mostrarSeccion('historial', this)">
-      <span class="nav-icon"><i data-lucide="clipboard-list"></i></span> Historial médico
-    </div>
-
     <div class="nav-section">Sistema</div>
     <div class="nav-item" onclick="mostrarSeccion('usuarios', this)">
-      <span class="nav-icon"><i data-lucide="users"></i></span> Usuarios del sistema
+      <span class="nav-icon"><i data-lucide="shield-half"></i></span> Administradores
     </div>
     <div class="nav-item" onclick="mostrarSeccion('roles', this)">
       <span class="nav-icon"><i data-lucide="key-round"></i></span> Roles
@@ -54,10 +52,15 @@
     <div class="nav-item" onclick="mostrarSeccion('reportes', this); cargarReportes()">
       <span class="nav-icon"><i data-lucide="file-bar-chart"></i></span> Reportes
     </div>
+    <div class="nav-item" onclick="mostrarSeccion('rep-centros', this); cargarReporteCentros()">
+      <span class="nav-icon"><i data-lucide="building-2"></i></span> Reportes centros
+    </div>
   </nav>
 
   <div class="sidebar-footer">
-    <button class="btn-logout" onclick="cerrarSesion()"><i data-lucide="log-out"></i> Cerrar sesión</button>
+    <button class="btn-logout" onclick="cerrarSesion()">
+      <i data-lucide="log-out"></i> Cerrar sesión
+    </button>
   </div>
 </aside>
 
@@ -71,8 +74,8 @@
     <div class="topbar-date" id="topbarFecha"></div>
   </div>
 
+  <!-- ESTADÍSTICAS -->
   <section class="seccion active" id="sec-estadisticas">
-
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-icon ic-verde"><i data-lucide="landmark"></i></div>
@@ -104,193 +107,224 @@
       <div class="panel">
         <div class="panel-header">
           <h3>Últimas solicitudes</h3>
-          <span onclick="mostrarSeccion('pendientes', null)" style="cursor:pointer;color:var(--verde-claro);font-size:0.78rem;">Ver todas →</span>
+          <span onclick="mostrarSeccion('pendientes',null)" style="cursor:pointer;color:var(--verde-claro);font-size:0.78rem;">Ver todas →</span>
         </div>
         <div class="tabla-wrap">
           <table>
-            <thead>
-              <tr><th>Centro</th><th>Depto.</th><th>Estado</th></tr>
-            </thead>
-            <tbody id="tablaResumen">
-              <tr class="loading-row"><td colspan="3">Cargando...</td></tr>
-            </tbody>
+            <thead><tr><th>Centro</th><th>Depto.</th><th>Estado</th></tr></thead>
+            <tbody id="tablaResumen"><tr class="loading-row"><td colspan="3">Cargando...</td></tr></tbody>
           </table>
         </div>
       </div>
-
       <div class="panel">
         <div class="panel-header">
           <h3>Centros por departamento</h3>
-          <span style="font-size:0.75rem;color:rgba(245,240,232,0.35);">Bolivia</span>
+          <span style="font-size:0.75rem;color:rgba(245,240,232,0.35)">Bolivia</span>
         </div>
         <div class="panel-body">
-          <div id="distDepto" style="display:flex;flex-direction:column;gap:0.6rem;"></div>
+          <div id="distDepto" style="display:flex;flex-direction:column;gap:0.6rem"></div>
         </div>
       </div>
     </div>
-
   </section>
 
+  <!-- TODOS LOS CENTROS -->
   <section class="seccion" id="sec-centros">
     <div class="panel">
       <div class="panel-header">
         <h3>Todos los centros de rescate</h3>
-        <span id="totalCentros" style="font-size:0.75rem;color:rgba(245,240,232,0.35);">— centros</span>
+        <span id="totalCentros" style="font-size:0.75rem;color:rgba(245,240,232,0.35)">— centros</span>
       </div>
       <div class="tabla-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>Centro</th><th>Departamento</th><th>Email</th>
-              <th>Teléfono</th><th>Estado</th><th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="tablaCentros">
-            <tr class="loading-row"><td colspan="6">Cargando centros...</td></tr>
-          </tbody>
+          <thead><tr><th>Centro</th><th>Departamento</th><th>Email</th><th>Teléfono</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="tablaCentros"><tr class="loading-row"><td colspan="6">Cargando...</td></tr></tbody>
         </table>
       </div>
     </div>
   </section>
 
+  <!-- PENDIENTES -->
   <section class="seccion" id="sec-pendientes">
     <div class="panel">
       <div class="panel-header">
         <h3>Solicitudes pendientes de aprobación</h3>
-        <span id="totalPendientes" style="font-size:0.75rem;color:var(--advertencia);">— pendientes</span>
+        <span id="totalPendientes" style="font-size:0.75rem;color:var(--advertencia)">— pendientes</span>
       </div>
       <div class="tabla-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>Centro</th><th>Departamento</th><th>Contacto</th>
-              <th>Registro</th><th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="tablaPendientes">
-            <tr class="loading-row"><td colspan="5">Cargando...</td></tr>
-          </tbody>
+          <thead><tr><th>Centro</th><th>Departamento</th><th>Contacto</th><th>Registro</th><th>Acciones</th></tr></thead>
+          <tbody id="tablaPendientes"><tr class="loading-row"><td colspan="5">Cargando...</td></tr></tbody>
         </table>
       </div>
     </div>
   </section>
 
+  <!-- ADMINISTRADORES -->
   <section class="seccion" id="sec-usuarios">
     <div class="panel">
       <div class="panel-header">
-        <h3>Usuarios del sistema</h3>
-        <button class="btn-primary" onclick="abrirModalUsuario()">+ Nuevo usuario</button>
+        <h3>Superadmins y administradores de centro</h3>
+        <button class="btn-primary" onclick="abrirModalUsuario()">
+          <i data-lucide="user-plus" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px"></i>
+          Nuevo admin
+        </button>
       </div>
       <div class="tabla-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>#</th><th>Username</th><th>Personal</th>
-              <th>Rol</th><th>Estado</th><th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="tablaUsuarios">
-            <tr class="loading-row"><td colspan="6">Cargando usuarios...</td></tr>
-          </tbody>
+          <thead><tr><th>#</th><th>Username</th><th>Personal</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="tablaUsuarios"><tr class="loading-row"><td colspan="6">Cargando...</td></tr></tbody>
         </table>
       </div>
     </div>
   </section>
 
+  <!-- ROLES -->
   <section class="seccion" id="sec-roles">
     <div class="panel">
       <div class="panel-header">
         <h3>Roles del sistema</h3>
+        <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)">Niveles de acceso</span>
       </div>
       <div class="tabla-wrap">
         <table>
-          <thead>
-            <tr><th>#</th><th>Rol</th><th>Descripción</th></tr>
-          </thead>
-          <tbody id="tablaRoles">
-            <tr class="loading-row"><td colspan="3">Cargando roles...</td></tr>
-          </tbody>
+          <thead><tr><th>#</th><th>Rol</th><th>Descripción</th></tr></thead>
+          <tbody id="tablaRoles"><tr class="loading-row"><td colspan="3">Cargando...</td></tr></tbody>
         </table>
       </div>
     </div>
   </section>
 
-  <section class="seccion" id="sec-historial">
-    <div class="panel">
-      <div class="panel-header">
-        <h3>Historial médico</h3>
-        <span style="font-size:0.75rem;color:rgba(245,240,232,0.35)">Solo lectura</span>
-      </div>
-      <div class="tabla-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Fecha</th><th>Animal</th><th>Veterinario</th>
-              <th>Diagnóstico</th><th>Estado salud</th><th>Próx. revisión</th>
-            </tr>
-          </thead>
-          <tbody id="tablaHistorial">
-            <tr class="loading-row"><td colspan="6">Cargando...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
+  <!-- REPORTES GLOBALES -->
   <section class="seccion" id="sec-reportes">
     <div class="grid-2" style="margin-bottom:1.5rem">
-
       <div class="panel">
         <div class="panel-header">
-          <h3>Animales por especie</h3>
-          <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)">Cantidad total</span>
-        </div>
-        <div class="tabla-wrap">
-          <table>
-            <thead><tr><th>#</th><th>Especie</th><th>Distribución</th></tr></thead>
-            <tbody id="tablaReporteEspecie">
-              <tr class="loading-row"><td colspan="3">Cargando...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-header">
-          <h3>Animales por estado</h3>
-          <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)">Estado actual</span>
+          <h3>Centros por estado</h3>
+          <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)">Aprobación</span>
         </div>
         <div class="tabla-wrap">
           <table>
             <thead><tr><th>Estado</th><th>Distribución</th></tr></thead>
-            <tbody id="tablaReporteEstado">
-              <tr class="loading-row"><td colspan="2">Cargando...</td></tr>
-            </tbody>
+            <tbody id="tablaRepCentroEstado"><tr class="loading-row"><td colspan="2">Cargando...</td></tr></tbody>
           </table>
         </div>
       </div>
-
-    </div>
-
-    <div class="panel">
-      <div class="panel-header">
-        <h3>Rescates por centro</h3>
-        <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)">Actividad de rescate</span>
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Centros por departamento</h3>
+          <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)">Bolivia</span>
+        </div>
+        <div class="tabla-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Departamento</th><th>Distribución</th></tr></thead>
+            <tbody id="tablaRepDepto"><tr class="loading-row"><td colspan="3">Cargando...</td></tr></tbody>
+          </table>
+        </div>
       </div>
-      <div class="tabla-wrap">
-        <table>
-          <thead><tr><th>#</th><th>Centro</th><th>Distribución</th></tr></thead>
-          <tbody id="tablaReporteCentro">
-            <tr class="loading-row"><td colspan="3">Cargando...</td></tr>
-          </tbody>
-        </table>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Rescates por centro</h3>
+          <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)">Actividad de rescate</span>
+        </div>
+        <div class="tabla-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Centro</th><th>Distribución</th></tr></thead>
+            <tbody id="tablaRepRescates"><tr class="loading-row"><td colspan="3">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Animales por estado</h3>
+          <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)">Global</span>
+        </div>
+        <div class="tabla-wrap">
+          <table>
+            <thead><tr><th>Estado</th><th>Distribución</th></tr></thead>
+            <tbody id="tablaRepEstado"><tr class="loading-row"><td colspan="2">Cargando...</td></tr></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </section>
 
+  <!-- REPORTES CENTROS -->
+  <section class="seccion" id="sec-rep-centros">
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Selecciona un centro</h3>
+        <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)" id="repCentroConteo">— centros</span>
+      </div>
+      <div id="listaCentrosReporte" style="padding:0.4rem 0">
+        <div style="padding:1.2rem 1.4rem;color:rgba(245,240,232,0.25);font-size:0.83rem">Cargando...</div>
+      </div>
+    </div>
+
+    <!-- Detalle del centro seleccionado -->
+    <div id="panelDetalleCentro" style="display:none;margin-top:1.4rem">
+      <div class="panel" style="margin-bottom:1.2rem">
+        <div class="panel-header">
+          <div>
+            <h3 id="repCentroNombre">—</h3>
+            <div style="font-size:0.75rem;color:rgba(245,240,232,0.35);margin-top:0.2rem" id="repCentroDepto">—</div>
+          </div>
+          <button class="btn-secondary" onclick="cerrarDetalleCentro()" style="font-size:0.78rem;padding:0.4rem 0.9rem">← Volver</button>
+        </div>
+        <div class="centro-detail-grid" style="padding:0 1.4rem 1.2rem">
+          <div class="centro-detail-item"><span class="cdi-label">Dirección</span><span class="cdi-val" id="repCentroDireccion">—</span></div>
+          <div class="centro-detail-item"><span class="cdi-label">Teléfono</span><span class="cdi-val" id="repCentroTel">—</span></div>
+          <div class="centro-detail-item"><span class="cdi-label">Email</span><span class="cdi-val" id="repCentroEmail">—</span></div>
+          <div class="centro-detail-item"><span class="cdi-label">Registro</span><span class="cdi-val" id="repCentroFecha">—</span></div>
+        </div>
+        <div style="display:flex;gap:2rem;padding:0.8rem 1.4rem;border-top:1px solid rgba(122,181,138,0.08)">
+          <div class="mini-stat"><i data-lucide="users" style="width:14px;height:14px;opacity:0.5"></i><span id="repCentroPersonal">— personal</span></div>
+          <div class="mini-stat"><i data-lucide="paw-print" style="width:14px;height:14px;opacity:0.5"></i><span id="repCentroAnimales">— animales</span></div>
+          <div class="mini-stat" style="color:var(--verde-claro)"><i data-lucide="heart-pulse" style="width:14px;height:14px;opacity:0.7"></i><span id="repCentroRehab">— en rehabilitación</span></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-header"><h3>Animales por especie</h3></div>
+          <div class="tabla-wrap">
+            <table>
+              <thead><tr><th>Especie</th><th>Distribución</th></tr></thead>
+              <tbody id="repTablaEspecie"><tr class="loading-row"><td colspan="2">Cargando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h3>Animales por estado</h3></div>
+          <div class="tabla-wrap">
+            <table>
+              <thead><tr><th>Estado</th><th>Distribución</th></tr></thead>
+              <tbody id="repTablaEstado"><tr class="loading-row"><td colspan="2">Cargando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:1.2rem">
+        <div class="panel-header"><h3>Personal del centro</h3></div>
+        <div class="tabla-wrap">
+          <table>
+            <thead><tr><th>Nombre</th><th>Rol</th><th>Username</th></tr></thead>
+            <tbody id="repTablaPersonal"><tr class="loading-row"><td colspan="3">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
 
 </main>
 
+<!-- TOAST -->
+<div id="toastContainer" style="position:fixed;bottom:1.5rem;right:1.5rem;display:flex;flex-direction:column;gap:0.5rem;z-index:9999"></div>
+
+<!-- MODAL CENTRO -->
 <div class="modal-overlay" id="modalCentro">
   <div class="modal">
     <div class="modal-header">
@@ -299,34 +333,13 @@
     </div>
     <div class="modal-body">
       <div class="detail-grid">
-        <div class="detail-item detail-full">
-          <label>Nombre</label>
-          <span id="detNombre">—</span>
-        </div>
-        <div class="detail-item">
-          <label>Departamento</label>
-          <span id="detDepto">—</span>
-        </div>
-        <div class="detail-item">
-          <label>Estado</label>
-          <span id="detEstado">—</span>
-        </div>
-        <div class="detail-item">
-          <label>Teléfono</label>
-          <span id="detTel">—</span>
-        </div>
-        <div class="detail-item">
-          <label>Email</label>
-          <span id="detEmail">—</span>
-        </div>
-        <div class="detail-item detail-full">
-          <label>Dirección</label>
-          <span id="detDir">—</span>
-        </div>
-        <div class="detail-item">
-          <label>Fecha de registro</label>
-          <span id="detFecha">—</span>
-        </div>
+        <div class="detail-item detail-full"><label>Nombre</label><span id="detNombre">—</span></div>
+        <div class="detail-item"><label>Departamento</label><span id="detDepto">—</span></div>
+        <div class="detail-item"><label>Estado</label><span id="detEstado">—</span></div>
+        <div class="detail-item"><label>Teléfono</label><span id="detTel">—</span></div>
+        <div class="detail-item"><label>Email</label><span id="detEmail">—</span></div>
+        <div class="detail-item detail-full"><label>Dirección</label><span id="detDir">—</span></div>
+        <div class="detail-item"><label>Fecha de registro</label><span id="detFecha">—</span></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -337,18 +350,18 @@
   </div>
 </div>
 
-
+<!-- MODAL USUARIO -->
 <div class="modal-overlay" id="modalUsuario">
   <div class="modal">
     <div class="modal-header">
-      <h3>Nuevo usuario</h3>
+      <h3>Nuevo administrador</h3>
       <button class="modal-close" onclick="cerrarModal('modalUsuario')"><i data-lucide="x"></i></button>
     </div>
     <div class="modal-body">
       <div class="form-row">
         <div class="form-field">
           <label>Username</label>
-          <input type="text" id="nuUsername" placeholder="juan.perez"/>
+          <input type="text" id="nuUsername" placeholder="nombre.apellido"/>
         </div>
         <div class="form-field">
           <label>Contraseña</label>
@@ -362,28 +375,21 @@
         </div>
         <div class="form-field">
           <label>Rol</label>
-          <select id="nuRol">
-            <option value="">Seleccionar...</option>
-          </select>
+          <select id="nuRol"><option value="">Seleccionar...</option></select>
         </div>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="cerrarModal('modalUsuario')">Cancelar</button>
-      <button class="btn-primary" onclick="crearUsuario()">Crear usuario</button>
+      <button class="btn-primary" onclick="crearUsuario()">Crear admin</button>
     </div>
   </div>
 </div>
 
-
-<div class="toast-container" id="toastContainer"></div>
-
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="../JS/dashboard_admin.js"></script>
 <script>
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
-  } else { lucide.createIcons(); }
+  document.addEventListener('DOMContentLoaded', () => setTimeout(() => lucide.createIcons(), 100));
 </script>
 </body>
 </html>

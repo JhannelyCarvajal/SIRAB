@@ -1,12 +1,9 @@
 const API_URL = 'http://127.0.0.1:8000';
 
-
 let centroSeleccionado = null;
-
 
 document.addEventListener('DOMContentLoaded', () => {
   cargarCentros();
-
 
   document.getElementById('selectCentro').addEventListener('keydown', e => {
     if (e.key === 'Enter') confirmarCentro();
@@ -18,11 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Enter') iniciarSesion();
   });
 
-
   document.getElementById('username').addEventListener('input', () => hideError('err_usuario'));
   document.getElementById('password').addEventListener('input', () => hideError('err_password'));
 });
-
 
 async function cargarCentros() {
   const select = document.getElementById('selectCentro');
@@ -52,7 +47,6 @@ async function cargarCentros() {
   }
 }
 
-
 function confirmarCentro() {
   const select = document.getElementById('selectCentro');
   const idx = select.selectedIndex;
@@ -68,12 +62,9 @@ function confirmarCentro() {
     nombre: select.options[idx].dataset.nombre || select.options[idx].text
   };
 
-
   document.getElementById('badgeNombre').textContent = centroSeleccionado.nombre;
-  
   irFase(2);
 }
-
 
 function cambiarCentro() {
   centroSeleccionado = null;
@@ -83,11 +74,9 @@ function cambiarCentro() {
   irFase(1);
 }
 
-
 async function iniciarSesion() {
   const username = document.getElementById('username').value.trim();
   const password = document.getElementById('password').value;
-
 
   let valid = true;
   if (!username) { showError('err_usuario'); valid = false; }
@@ -98,13 +87,11 @@ async function iniciarSesion() {
 
   if (!valid) return;
 
-
   setLoading('btnLogin', true);
   ocultarAlerta();
 
-
   try {
-     const res = await fetch(`${API_URL}/usuarios/login`, {
+    const res = await fetch(`${API_URL}/usuarios/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -117,7 +104,6 @@ async function iniciarSesion() {
     const data = await res.json();
 
     if (!res.ok) {
-
       mostrarAlertaLogin(data.detail || 'Usuario o contraseña incorrectos.');
       return;
     }
@@ -126,8 +112,8 @@ async function iniciarSesion() {
     sessionStorage.setItem('usuario',   JSON.stringify(data.usuario));
     sessionStorage.setItem('rol',       data.usuario.rol);
     sessionStorage.setItem('id_centro', centroSeleccionado.id);
+    sessionStorage.setItem('_pw',       password);
 
-    
     redirigirPorRol(data.usuario.rol);
 
   } catch (err) {
@@ -139,10 +125,10 @@ async function iniciarSesion() {
 
 function redirigirPorRol(rol) {
   const rutas = {
-    'Admin':         'dashboard_admin.html', 
-    'Administrador': 'dashboard_centro.html',      
-    'Veterinario':   'dashboard_veterinario.html',  
-    'Operador':      'dashboard_operador.html',
+    'Admin':         'dashboard_admin.html',        // ← Superadmin
+    'Administrador': 'dashboard_centro.html',       // ← Admin de centro (futuro)
+    'Veterinario':   'dashboard_veterinario.html',  // ← futuro
+    'Operador':      'dashboard_operador.html',     // ← futuro
   };
   const destino = rutas[rol] || 'dashboard.html';
   window.location.href = destino;

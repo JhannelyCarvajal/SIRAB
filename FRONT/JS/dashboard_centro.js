@@ -1,7 +1,10 @@
+// ── Config ────────────────────────────────────────────────
 const API = 'http://127.0.0.1:8000';
 
+// Cargos del sistema que NO deben aparecer como personal operativo
 const CARGOS_SISTEMA = ['administrador', 'admin', 'superadmin', 'superadministrador'];
 
+// ── Estado global ─────────────────────────────────────────
 let MI_CENTRO = null;
 let usuario   = null;
 let animalesCentro   = [];
@@ -11,11 +14,13 @@ let especiesLista    = [];
 let rescatesLista    = [];
 let rolesLista       = [];
 
+// ── Init ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   verificarSesion();
   mostrarFecha();
   cargarTodo();
 
+  // Cerrar modales al hacer click fuera
   document.querySelectorAll('.modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', e => {
       if (e.target === overlay) overlay.classList.remove('visible');
@@ -44,6 +49,7 @@ function mostrarFecha() {
 }
 
 async function cargarTodo() {
+  // Especies debe cargar ANTES que animales para que el lookup funcione
   await cargarEspecies();
   await Promise.all([
     cargarNombreCentro(),
@@ -55,6 +61,7 @@ async function cargarTodo() {
   ]);
 }
 
+// ── NOMBRE DEL CENTRO ─────────────────────────────────────
 async function cargarNombreCentro() {
   try {
     const res  = await fetch(`${API}/centros/${MI_CENTRO}`);
@@ -65,6 +72,7 @@ async function cargarNombreCentro() {
   }
 }
 
+// ── ANIMALES ──────────────────────────────────────────────
 async function cargarAnimales() {
   try {
     const res = await fetch(`${API}/animales/`);
@@ -109,6 +117,7 @@ async function cargarAnimales() {
   }
 }
 
+// ── VER DETALLE ANIMAL ────────────────────────────────────
 async function verAnimal(id) {
   const animal = animalesCentro.find(a => a.id_animal === id);
   if (!animal) return;
@@ -147,11 +156,13 @@ async function verAnimal(id) {
   abrirModal('modalVerAnimal');
 }
 
+// ── PERSONAL ──────────────────────────────────────────────
 async function cargarPersonal() {
   try {
     const res   = await fetch(`${API}/personal/`);
     const todos = await res.json();
 
+    // Solo personal del centro, excluyendo cargos administrativos del sistema
     personalCentro = todos.filter(p =>
       p.id_centro === MI_CENTRO &&
       !CARGOS_SISTEMA.includes((p.cargo || '').toLowerCase().trim())
@@ -161,6 +172,7 @@ async function cargarPersonal() {
     document.getElementById('statPersonal').textContent       = personalCentro.length;
     document.getElementById('statPersonalActivo').textContent = `${activos} activos`;
 
+    // Tabla resumen (top 5)
     document.getElementById('tablaResumenPersonal').innerHTML =
       personalCentro.slice(0,5).map(p => `
         <tr>
@@ -172,6 +184,7 @@ async function cargarPersonal() {
         </tr>
       `).join('') || emptyRow(3, 'Sin personal registrado');
 
+    // Tabla completa
     document.getElementById('tablaPersonal').innerHTML = personalCentro.length
       ? personalCentro.map(p => `
           <tr>
@@ -196,6 +209,7 @@ async function cargarPersonal() {
   }
 }
 
+// ── HISTORIAL ─────────────────────────────────────────────
 async function cargarHistorial() {
   try {
     const res  = await fetch(`${API}/historial_medico/`);
@@ -226,6 +240,7 @@ async function cargarHistorial() {
   }
 }
 
+// ── LISTAS AUXILIARES ─────────────────────────────────────
 async function cargarEspecies() {
   try {
     const res = await fetch(`${API}/especies/`);
@@ -236,6 +251,7 @@ async function cargarEspecies() {
   } catch(e) {}
 }
 
+// Lookup de especie por id — devuelve nombre_comun + tipo
 function getEspecie(id_especie) {
   return especiesLista.find(e => e.id_especie === id_especie) || null;
 }
@@ -264,6 +280,7 @@ async function cargarRoles() {
   try {
     const res = await fetch(`${API}/roles/`);
     rolesLista = await res.json();
+    // Solo roles operativos — excluir Admin y Superadmin
     const rolesPersonal = rolesLista.filter(r =>
       ['Veterinario', 'Operador', 'Administrador'].includes(r.nombre)
     );
@@ -278,6 +295,7 @@ async function cargarRoles() {
   } catch(e) {}
 }
 
+// ── GUARDAR ANIMAL ────────────────────────────────────────
 async function guardarAnimal() {
   const id_especie            = parseInt(document.getElementById('anEspecie').value);
   const id_rescate            = parseInt(document.getElementById('anRescate').value);
@@ -311,6 +329,7 @@ async function guardarAnimal() {
   }
 }
 
+// ── GUARDAR PERSONAL ──────────────────────────────────────
 async function guardarPersonal() {
   const nombre   = document.getElementById('pNombre').value.trim();
   const paterno  = document.getElementById('pPaterno').value.trim();
@@ -329,6 +348,7 @@ async function guardarPersonal() {
   }
 
   try {
+    // 1. Crear el personal
     const resPersonal = await fetch(`${API}/personal/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -346,6 +366,7 @@ async function guardarPersonal() {
 
     if (!id_personal) throw new Error('No se recibió el ID del personal creado');
 
+    // 2. Crear el usuario vinculado
     const resUsuario = await fetch(`${API}/usuarios/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -353,6 +374,7 @@ async function guardarPersonal() {
     });
     if (!resUsuario.ok) {
       const err = await resUsuario.json();
+      // El personal ya fue creado — avisar pero no fallar silenciosamente
       throw new Error('Usuario: ' + (err.detail || 'Error al crear acceso'));
     }
 
@@ -365,6 +387,7 @@ async function guardarPersonal() {
   }
 }
 
+// ── TOGGLE PERSONAL ───────────────────────────────────────
 async function togglePersonal(id, estadoActual) {
   try {
     const p = personalCentro.find(x => x.id_personal === id);
@@ -382,6 +405,7 @@ async function togglePersonal(id, estadoActual) {
   }
 }
 
+// ── USUARIOS ──────────────────────────────────────────────
 async function abrirModalUsuario() {
   const sel = document.getElementById('uPersonal');
   sel.innerHTML = '<option value="">Seleccionar personal...</option>' +
@@ -455,11 +479,13 @@ async function eliminarUsuario(id, username) {
   }
 }
 
+// ── HISTORIAL MÉDICO ──────────────────────────────────────
 function verAnimalDesdeHistorial(id_animal) {
   mostrarSeccion('animales', null);
   setTimeout(() => verAnimal(id_animal), 100);
 }
 
+// ── MODALES ───────────────────────────────────────────────
 function abrirModalAnimal()   { abrirModal('modalAnimal'); }
 function abrirModalPersonal() {
   ['pNombre','pPaterno','pCargo','pEmail','pTel','pPassword','pUsername'].forEach(id => {
@@ -473,6 +499,7 @@ function abrirModalPersonal() {
 function abrirModal(id)       { document.getElementById(id).classList.add('visible'); }
 function cerrarModal(id)      { document.getElementById(id).classList.remove('visible'); }
 
+// ── TABS ──────────────────────────────────────────────────
 function cambiarTab(tabId, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -480,6 +507,7 @@ function cambiarTab(tabId, btn) {
   if (btn) btn.classList.add('active');
 }
 
+// ── NAVEGACIÓN ────────────────────────────────────────────
 const titulos = {
   resumen:   ['Resumen del centro',  'Vista general de tu centro'],
   animales:  ['Animales',            'Gestión de animales de tu centro'],
@@ -499,11 +527,13 @@ function mostrarSeccion(id, navEl) {
   if (id === 'usuarios') cargarUsuarios();
 }
 
+// ── LOGOUT ────────────────────────────────────────────────
 function cerrarSesion() {
   sessionStorage.clear();
   window.location.href = 'login_personal.html';
 }
 
+// ── TOAST ─────────────────────────────────────────────────
 function toast(msg, tipo = 'info') {
   const cont = document.getElementById('toastContainer');
   const el   = document.createElement('div');
@@ -518,6 +548,7 @@ function toast(msg, tipo = 'info') {
   setTimeout(() => el.remove(), 3500);
 }
 
+// ── HELPERS ───────────────────────────────────────────────
 function badgeEstadoAnimal(estado) {
   if (!estado) return '<span class="badge badge-estable">—</span>';
   const e = estado.toLowerCase();
@@ -548,20 +579,23 @@ function emptyRow(cols, msg) {
   return `<tr><td colspan="${cols}"><div class="empty-state"><div class="empty-icon">${icon}</div><p>${msg}</p></div></td></tr>`;
 }
 
+// ── REPORTES DEL CENTRO ───────────────────────────────────
 async function cargarReportesCentro() {
   try {
     const [espRes, estadoRes, vetRes] = await Promise.all([
       fetch(`${API}/reportes/animales-especie`),
       fetch(`${API}/reportes/animales-estado`),
-      fetch(`${API}/reportes/actividad-veterinarios`),
+      fetch(`${API}/reportes/actividad-veterinarios?id_centro=${MI_CENTRO}`),
     ]);
     const porEspecie = await espRes.json();
     const porEstado  = await estadoRes.json();
     const porVet     = await vetRes.json();
 
-    const espCentro = porEspecie;
+    // Filtrar solo los del centro actual
+    const espCentro = porEspecie; // global, no filtrado por centro en este endpoint
     const estCentro = porEstado;
 
+    // Tabla por especie
     const tbEsp = document.getElementById('repTablaEspecie');
     if (tbEsp) {
       const max = Math.max(...espCentro.map(r => r.cantidad), 1);
@@ -583,6 +617,7 @@ async function cargarReportesCentro() {
         : emptyRow(4, 'Sin datos');
     }
 
+    // Tabla por estado
     const tbEst = document.getElementById('repTablaEstado');
     if (tbEst) {
       const max = Math.max(...estCentro.map(r => r.cantidad), 1);
@@ -602,11 +637,12 @@ async function cargarReportesCentro() {
         : emptyRow(2, 'Sin datos');
     }
 
+    // Tabla actividad veterinarios — filtrar por centro actual
     const tbVet = document.getElementById('repTablaVeterinarios');
     if (tbVet) {
       const vetsCentro = porVet.filter(v =>
         v.centro && animalesCentro.length > 0
-          ? true 
+          ? true  // mostrar todos si no hay forma de filtrar
           : true
       );
       const max = Math.max(...vetsCentro.map(v => v.total_registros), 1);
@@ -648,6 +684,7 @@ function badgeEstadoAnimal(estado) {
   return `<span class="badge badge-estable">${estado}</span>`;
 }
 
+// ── VER REPORTE COMPLETO DE VETERINARIO ──────────────────
 async function verReporteVet(vet) {
   document.getElementById('modalVetTitulo').textContent  = vet.veterinario.trim();
   document.getElementById('modalVetCentro').textContent  = vet.centro;
@@ -664,7 +701,8 @@ async function verReporteVet(vet) {
     const todoHistorial = await histRes.json();
     const animales      = await animalesRes.json();
 
-
+    // Filtrar por nombre de veterinario — match por id_personal
+    // Buscamos en personalCentro el personal que coincida con el nombre
     const vetPersonal = personalCentro.find(p =>
       (`${p.nombre} ${p.paterno || ''}`).trim() === vet.veterinario.trim()
     );

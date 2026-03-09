@@ -4,11 +4,9 @@ from config.conexionDB import get_conexion
 router = APIRouter()
 
 
-
-
+# ── REPORTE GENERAL DE ANIMALES ───────────────────────────
 @router.get("/animales")
 async def reporte_animales(conn=Depends(get_conexion)):
-
     async with conn.cursor() as cursor:
         await cursor.execute("""
             SELECT
@@ -30,12 +28,9 @@ async def reporte_animales(conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-
-
-
+# ── ANIMALES POR ESPECIE ──────────────────────────────────
 @router.get("/animales-especie")
 async def animales_por_especie(conn=Depends(get_conexion)):
-
     async with conn.cursor() as cursor:
         await cursor.execute("""
             SELECT
@@ -51,12 +46,9 @@ async def animales_por_especie(conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-
-
-
+# ── ANIMALES POR ESTADO ───────────────────────────────────
 @router.get("/animales-estado")
 async def animales_por_estado(conn=Depends(get_conexion)):
-
     async with conn.cursor() as cursor:
         await cursor.execute("""
             SELECT
@@ -69,12 +61,9 @@ async def animales_por_estado(conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-
-
-
+# ── RESCATES POR CENTRO ───────────────────────────────────
 @router.get("/rescates-centro")
 async def rescates_por_centro(conn=Depends(get_conexion)):
-
     async with conn.cursor() as cursor:
         await cursor.execute("""
             SELECT
@@ -89,7 +78,7 @@ async def rescates_por_centro(conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-
+# ── ANIMALES POR TIPO DE ESPECIE ──────────────────────────
 @router.get("/animales-tipo")
 async def animales_por_tipo(conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -106,26 +95,41 @@ async def animales_por_tipo(conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-
+# ── ACTIVIDAD MÉDICA POR VETERINARIO ─────────────────────
 @router.get("/actividad-veterinarios")
-async def actividad_veterinarios(conn=Depends(get_conexion)):
+async def actividad_veterinarios(id_centro: int = None, conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
-        await cursor.execute("""
-            SELECT
-                p.nombre || ' ' || COALESCE(p.paterno, '') AS veterinario,
-                c.nombre   AS centro,
-                COUNT(hm.id_historial) AS total_registros,
-                MAX(hm.fecha_revision) AS ultimo_registro
-            FROM historial_medico hm
-            JOIN personal        p ON hm.id_personal = p.id_personal
-            JOIN centros_rescate c ON p.id_centro    = c.id_centro
-            GROUP BY p.nombre, p.paterno, c.nombre
-            ORDER BY total_registros DESC
-        """)
+        if id_centro:
+            await cursor.execute("""
+                SELECT
+                    p.nombre || ' ' || COALESCE(p.paterno, '') AS veterinario,
+                    c.nombre   AS centro,
+                    COUNT(hm.id_historial) AS total_registros,
+                    MAX(hm.fecha_revision) AS ultimo_registro
+                FROM historial_medico hm
+                JOIN personal        p ON hm.id_personal = p.id_personal
+                JOIN centros_rescate c ON p.id_centro    = c.id_centro
+                WHERE p.id_centro = %s
+                GROUP BY p.nombre, p.paterno, c.nombre
+                ORDER BY total_registros DESC
+            """, (id_centro,))
+        else:
+            await cursor.execute("""
+                SELECT
+                    p.nombre || ' ' || COALESCE(p.paterno, '') AS veterinario,
+                    c.nombre   AS centro,
+                    COUNT(hm.id_historial) AS total_registros,
+                    MAX(hm.fecha_revision) AS ultimo_registro
+                FROM historial_medico hm
+                JOIN personal        p ON hm.id_personal = p.id_personal
+                JOIN centros_rescate c ON p.id_centro    = c.id_centro
+                GROUP BY p.nombre, p.paterno, c.nombre
+                ORDER BY total_registros DESC
+            """)
         return await cursor.fetchall()
 
 
-
+# ── RESCATES POR TIPO DE INCIDENTE ────────────────────────
 @router.get("/rescates-tipo")
 async def rescates_por_tipo(conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -140,7 +144,7 @@ async def rescates_por_tipo(conn=Depends(get_conexion)):
         return await cursor.fetchall()
 
 
-
+# ── RESUMEN GENERAL DEL SISTEMA ───────────────────────────
 @router.get("/resumen-global")
 async def resumen_global(conn=Depends(get_conexion)):
     async with conn.cursor() as cursor:
@@ -158,11 +162,10 @@ async def resumen_global(conn=Depends(get_conexion)):
         return await cursor.fetchone()
 
 
+# ── HISTORIAL COMPLETO DE UN ANIMAL ──────────────────────
 @router.get("/historial-animal/{id_animal}")
 async def historial_completo_animal(id_animal: int, conn=Depends(get_conexion)):
-
     async with conn.cursor() as cursor:
-
 
         await cursor.execute("""
             SELECT
@@ -184,13 +187,9 @@ async def historial_completo_animal(id_animal: int, conn=Depends(get_conexion)):
             LEFT JOIN rescates   r  ON a.id_rescate = r.id_rescate
             WHERE a.id_animal = %s
         """, (id_animal,))
-
         animal = await cursor.fetchone()
-        
         if not animal:
             raise HTTPException(status_code=404, detail="Animal no encontrado")
-
-
 
         await cursor.execute("""
             SELECT
@@ -202,11 +201,8 @@ async def historial_completo_animal(id_animal: int, conn=Depends(get_conexion)):
             JOIN centros_rescate    c ON hc.id_centro = c.id_centro
             WHERE hc.id_animal = %s
             ORDER BY hc.fecha_inicio
-        """, (id_animal,)
-        )
+        """, (id_animal,))
         historial_centros = await cursor.fetchall()
-
-
 
         await cursor.execute("""
             SELECT
@@ -221,9 +217,7 @@ async def historial_completo_animal(id_animal: int, conn=Depends(get_conexion)):
             WHERE hm.id_animal = %s
             ORDER BY hm.fecha_revision DESC
         """, (id_animal,))
-
         historial_medico = await cursor.fetchall()
-
 
         return {
             "animal":            animal,

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Operador — SIRAB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../CSS/dashboard_operador.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">SIRA<span>B</span></div>
+    <div class="logo-badge">
+      <i data-lucide="hard-hat"></i>
+      Operador
+    </div>
+  </div>
+
+  <div class="sidebar-profile">
+    <div class="profile-avatar"><i data-lucide="user-round"></i></div>
+    <div>
+      <div class="profile-name" id="sidebarNombre">Cargando...</div>
+      <div class="profile-role">Operador</div>
+      <div class="sidebar-centro" id="sidebarCentro">—</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">General</div>
+    <div class="nav-item active" onclick="mostrarSeccion('resumen', this)">
+      <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span> Resumen
+    </div>
+
+    <div class="nav-section">Animales</div>
+    <div class="nav-item" onclick="mostrarSeccion('animales', this)">
+      <span class="nav-icon"><i data-lucide="paw-print"></i></span> Animales
+    </div>
+    <div class="nav-item" onclick="mostrarSeccion('rescates', this)">
+      <span class="nav-icon"><i data-lucide="map-pin"></i></span> Rescates
+    </div>
+
+    <div class="nav-section">Clínico</div>
+    <div class="nav-item" onclick="mostrarSeccion('historial', this)">
+      <span class="nav-icon"><i data-lucide="stethoscope"></i></span> Historial médico
+    </div>
+
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="btn-logout" onclick="cerrarSesion()">
+      <i data-lucide="log-out"></i> Cerrar sesión
+    </button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <h1 id="topbarTitulo">Resumen</h1>
+      <div class="topbar-sub" id="topbarSub">Vista general de tu centro</div>
+    </div>
+    <div class="topbar-date" id="topbarFecha"></div>
+  </div>
+
+  <!-- ══ RESUMEN ══════════════════════════════════════════════ -->
+  <section class="seccion active" id="sec-resumen">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon ic-verde"><i data-lucide="paw-print"></i></div>
+        <div class="stat-valor" id="statAnimales">—</div>
+        <div class="stat-label">Animales</div>
+        <div class="stat-sub" id="statRehab">— en rehabilitación</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon ic-dorado"><i data-lucide="map-pin"></i></div>
+        <div class="stat-valor" id="statRescates">—</div>
+        <div class="stat-label">Rescates</div>
+        <div class="stat-sub" id="statRescatesMes">este mes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon ic-azul"><i data-lucide="heart-pulse"></i></div>
+        <div class="stat-valor" id="statHistorial">—</div>
+        <div class="stat-label">Registros médicos</div>
+        <div class="stat-sub">total acumulado</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon ic-rojo"><i data-lucide="alert-triangle"></i></div>
+        <div class="stat-valor" id="statCriticos">—</div>
+        <div class="stat-label">En tratamiento</div>
+        <div class="stat-sub">requieren atención</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Animales recientes</h3>
+          <span onclick="mostrarSeccion('animales',null)" style="cursor:pointer;color:var(--verde-claro);font-size:0.78rem">Ver todos →</span>
+        </div>
+        <div class="tabla-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Animal</th><th>Especie</th><th>Estado</th></tr></thead>
+            <tbody id="tablaResumenAnimales"><tr class="loading-row"><td colspan="4">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Animales por estado</h3>
+          <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)">Este centro</span>
+        </div>
+        <div class="panel-body">
+          <div id="distEstado" style="display:flex;flex-direction:column;gap:0.6rem"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ANIMALES ═════════════════════════════════════════════ -->
+  <section class="seccion" id="sec-animales">
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Animales del centro</h3>
+        <button class="btn-primary" onclick="abrirModalAnimal()">
+          <i data-lucide="plus" style="width:14px;height:14px"></i> Nuevo animal
+        </button>
+      </div>
+      <div style="padding:0.8rem 1rem 0">
+        <div class="search-bar">
+          <input class="search-input" id="buscarAnimal" placeholder="Buscar por nombre, especie, ID..." oninput="filtrarAnimales()"/>
+          <select class="filter-select" id="filtroEstado" onchange="filtrarAnimales()">
+            <option value="">Todos los estados</option>
+            <option>En rehabilitación</option>
+            <option>En tratamiento</option>
+            <option>Estable</option>
+            <option>Listo para liberación</option>
+          </select>
+        </div>
+      </div>
+      <div class="tabla-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Animal</th><th>Especie</th><th>Sexo</th><th>Peso</th><th>Estado</th><th>Ingreso</th><th>Acciones</th></tr></thead>
+          <tbody id="tablaAnimales"><tr class="loading-row"><td colspan="8">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ RESCATES ═════════════════════════════════════════════ -->
+  <section class="seccion" id="sec-rescates">
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Rescates del centro</h3>
+        <button class="btn-primary" onclick="abrirModalRescate()">
+          <i data-lucide="plus" style="width:14px;height:14px"></i> Registrar rescate
+        </button>
+      </div>
+      <div class="tabla-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Animal</th><th>Tipo de incidente</th><th>Ubicación</th><th>Fecha</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="tablaRescates"><tr class="loading-row"><td colspan="6">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ HISTORIAL MÉDICO ══════════════════════════════════════ -->
+  <section class="seccion" id="sec-historial">
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Historial médico</h3>
+        <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)">Solo lectura</span>
+      </div>
+      <div style="padding:0.8rem 1rem 0">
+        <div class="search-bar">
+          <input class="search-input" id="buscarHistorial" placeholder="Buscar por animal, veterinario..." oninput="filtrarHistorial()"/>
+        </div>
+      </div>
+      <div id="listaHistorial" style="padding:0 0.2rem">
+        <div class="loading-row" style="padding:1.5rem;text-align:center;color:rgba(245,240,232,0.2)">Cargando...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ MI PERFIL ═════════════════════════════════════════════ -->
+
+</main>
+
+<!-- TOAST -->
+<div id="toastContainer" style="position:fixed;bottom:1.5rem;right:1.5rem;display:flex;flex-direction:column;gap:0.5rem;z-index:9999"></div>
+
+<!-- ══ MODAL FICHA ANIMAL ════════════════════════════════════ -->
+<div class="modal-overlay" id="modalFichaAnimal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3>Ficha del animal</h3>
+      <button class="modal-close" onclick="cerrarModal('modalFichaAnimal')"><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body" id="fichaAnimalBody"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="cerrarModal('modalFichaAnimal')">Cerrar</button>
+      <button class="btn-primary" onclick="editarDesdeficha()">
+        <i data-lucide="pencil" style="width:13px;height:13px"></i> Editar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL CREAR / EDITAR ANIMAL ══════════════════════════ -->
+<div class="modal-overlay" id="modalAnimal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3 id="modalAnimalTitulo">Nuevo animal</h3>
+      <button class="modal-close" onclick="cerrarModal('modalAnimal')"><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-section-title">Identificación</div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Especie</label>
+          <select id="aEspecie"><option value="">Seleccionar...</option></select>
+        </div>
+        <div class="form-field">
+          <label>Sexo</label>
+          <select id="aSexo">
+            <option value="">Desconocido</option>
+            <option value="Macho">Macho</option>
+            <option value="Hembra">Hembra</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Peso (kg)</label>
+          <input type="number" step="0.1" id="aPeso" placeholder="ej: 12.5"/>
+        </div>
+      </div>
+      <div class="form-section-title">Fechas</div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Fecha de ingreso</label>
+          <input type="date" id="aFechaIngreso"/>
+        </div>
+        <div class="form-field">
+          <label>Fecha nacimiento aprox.</label>
+          <input type="date" id="aFechaNacimiento"/>
+        </div>
+      </div>
+      <div class="form-section-title">Estado y rescate</div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Estado actual</label>
+          <select id="aEstado">
+            <option>En rehabilitación</option>
+            <option>En tratamiento</option>
+            <option>Estable</option>
+            <option>Listo para liberación</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Rescate vinculado (ID)</label>
+          <input type="number" id="aRescate" placeholder="Opcional"/>
+        </div>
+      </div>
+      <div class="form-section-title">Observaciones</div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Notas / apodo / observaciones</label>
+          <textarea id="aObservaciones" rows="3" placeholder="Apodo, comportamiento, notas importantes..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="cerrarModal('modalAnimal')">Cancelar</button>
+      <button class="btn-primary" onclick="guardarAnimal()">
+        <i data-lucide="save" style="width:13px;height:13px"></i> Guardar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL RESCATE ═════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalRescate">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3>Registrar rescate</h3>
+      <button class="modal-close" onclick="cerrarModal('modalRescate')"><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body">
+
+      <div class="form-section-title">Datos del rescate</div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Tipo de incidente</label>
+          <input type="text" id="rTipo" placeholder="ej: Atropello, Trampa, Abandono..."/>
+        </div>
+        <div class="form-field">
+          <label>Fecha</label>
+          <input type="date" id="rFecha"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Ubicación / lugar</label>
+          <input type="text" id="rUbicacion" placeholder="ej: Av. Arce esq. Belisario Salinas"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Descripción</label>
+          <textarea id="rDescripcion" rows="2" placeholder="Detalles del rescate..."></textarea>
+        </div>
+      </div>
+
+      <div class="form-section-title" style="margin-top:1rem">Animal rescatado</div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Especie</label>
+          <select id="rAnimal"><option value="">Desconocida</option></select>
+        </div>
+        <div class="form-field">
+          <label>Sexo</label>
+          <select id="rSexo">
+            <option value="">Desconocido</option>
+            <option value="Macho">Macho</option>
+            <option value="Hembra">Hembra</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Peso (kg)</label>
+          <input type="number" step="0.1" id="rPeso" placeholder="ej: 3.5"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Estado inicial</label>
+          <select id="rEstadoAnimal">
+            <option value="En rehabilitación">En rehabilitación</option>
+            <option value="En tratamiento">En tratamiento</option>
+            <option value="Estable">Estable</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Nacimiento aprox. (opcional)</label>
+          <input type="date" id="rNacimiento"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Observaciones del animal</label>
+          <textarea id="rObsAnimal" rows="2" placeholder="Condición al ingreso, apodo, notas..."></textarea>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="cerrarModal('modalRescate')">Cancelar</button>
+      <button class="btn-primary" onclick="guardarRescate()">
+        <i data-lucide="save" style="width:13px;height:13px"></i> Registrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="../JS/dashboard_operador.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => setTimeout(() => lucide.createIcons(), 100));
+</script>
+</body>
+</html>
