@@ -248,7 +248,7 @@ async function guardarEstadoAnimal(id) {
 
   if (!estado_actual) { toast('Selecciona un estado', 'error'); return; }
   try {
-    const res = await apiFetch(`/animales/animales/${id}`, {
+    const res = await apiFetch(`/animales/${id}`, {
       method: 'PUT',
       body: JSON.stringify({
         id_especie:             animal.id_especie,

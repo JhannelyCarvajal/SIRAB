@@ -10,12 +10,14 @@
 </head>
 <body>
 
+<!-- ══ SIDEBAR ══════════════════════════════════════════════ -->
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-text">SIRA<span>B</span></div>
     <div class="logo-badge"><i data-lucide="landmark"></i> Administrador</div>
     <div class="logo-centro" id="sidebarCentro">Cargando centro...</div>
   </div>
+
   <div class="sidebar-profile">
     <div class="profile-avatar"><i data-lucide="user-circle-2"></i></div>
     <div>
@@ -23,6 +25,7 @@
       <div class="profile-role">Administrador</div>
     </div>
   </div>
+
   <nav class="sidebar-nav">
     <div class="nav-section">Mi Centro</div>
     <div class="nav-item active" onclick="mostrarSeccion('resumen', this)">
@@ -30,6 +33,9 @@
     </div>
     <div class="nav-item" onclick="mostrarSeccion('animales', this)">
       <span class="nav-icon"><i data-lucide="paw-print"></i></span> Animales
+    </div>
+    <div class="nav-item" onclick="mostrarSeccion('historial', this)">
+      <span class="nav-icon"><i data-lucide="clipboard-list"></i></span> Historial médico
     </div>
 
     <div class="nav-section">Personal</div>
@@ -39,16 +45,19 @@
     <div class="nav-item" onclick="mostrarSeccion('usuarios', this)">
       <span class="nav-icon"><i data-lucide="key-round"></i></span> Usuarios / accesos
     </div>
-    <div class="nav-item" onclick="mostrarSeccion('reportes', this); cargarReportesCentro()">
+    <div class="nav-item" onclick="mostrarSeccion('reportes', this)">
       <span class="nav-icon"><i data-lucide="file-bar-chart"></i></span> Reportes
     </div>
   </nav>
+
   <div class="sidebar-footer">
     <button class="btn-logout" onclick="cerrarSesion()"><i data-lucide="log-out"></i> Cerrar sesión</button>
   </div>
 </aside>
 
+<!-- ══ MAIN ══════════════════════════════════════════════════ -->
 <main class="main">
+
   <div class="topbar">
     <div>
       <h1 id="topbarTitulo">Resumen del centro</h1>
@@ -57,6 +66,7 @@
     <div class="topbar-date" id="topbarFecha"></div>
   </div>
 
+  <!-- ══ RESUMEN ══════════════════════════════════════════════ -->
   <section class="seccion active" id="sec-resumen">
     <div class="stats-grid">
       <div class="stat-card">
@@ -84,6 +94,7 @@
         <div class="stat-sub">En condición óptima</div>
       </div>
     </div>
+
     <div class="grid-2">
       <div class="panel">
         <div class="panel-header">
@@ -92,13 +103,14 @@
         </div>
         <div class="tabla-wrap">
           <table>
-            <thead><tr><th>#</th><th>Tipo</th><th>Animal</th><th>Estado</th></tr></thead>
+            <thead><tr><th>Animal</th><th>Especie</th><th>Estado</th></tr></thead>
             <tbody id="tablaResumenAnimales">
-              <tr><td colspan="4" style="color:rgba(245,240,232,0.3);padding:1.2rem 1rem;font-size:0.83rem;">Cargando...</td></tr>
+              <tr><td colspan="3" style="color:rgba(245,240,232,0.3);padding:1.2rem 1rem;font-size:0.83rem;">Cargando...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
+
       <div class="panel">
         <div class="panel-header">
           <h3>Personal del centro</h3>
@@ -116,28 +128,30 @@
     </div>
   </section>
 
+  <!-- ══ ANIMALES ═════════════════════════════════════════════ -->
   <section class="seccion" id="sec-animales">
     <div class="panel">
       <div class="panel-header">
         <h3>Animales de mi centro</h3>
-        <button class="btn-primary" onclick="abrirModalAnimal()"><i data-lucide="plus"></i> Registrar animal</button>
+        
       </div>
       <div class="tabla-wrap">
         <table>
           <thead>
             <tr>
-              <th>#</th><th>Tipo</th><th>Animal</th><th>Sexo</th><th>Peso</th>
+              <th>#</th><th>Especie</th><th>Sexo</th><th>Peso</th>
               <th>Ingreso</th><th>Estado</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody id="tablaAnimales">
-            <tr><td colspan="8" style="color:rgba(245,240,232,0.3);padding:1.2rem 1rem;font-size:0.83rem;">Cargando...</td></tr>
+            <tr><td colspan="7" style="color:rgba(245,240,232,0.3);padding:1.2rem 1rem;font-size:0.83rem;">Cargando...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </section>
 
+  <!-- ══ HISTORIAL MÉDICO ══════════════════════════════════════ -->
   <section class="seccion" id="sec-historial">
     <div class="panel">
       <div class="panel-header">
@@ -160,6 +174,7 @@
     </div>
   </section>
 
+  <!-- ══ PERSONAL ══════════════════════════════════════════════ -->
   <section class="seccion" id="sec-personal">
     <div class="panel">
       <div class="panel-header">
@@ -182,6 +197,7 @@
     </div>
   </section>
 
+  <!-- ══ USUARIOS ══════════════════════════════════════════════ -->
   <section class="seccion" id="sec-usuarios">
     <div class="panel">
       <div class="panel-header">
@@ -200,10 +216,14 @@
       </div>
     </div>
   </section>
+
+
+  <!-- ══ REPORTES ════════════════════════════════════════════ -->
   <section class="seccion" id="sec-reportes">
 
     <div class="grid-2" style="margin-bottom:1.5rem">
 
+      <!-- Animales por especie -->
       <div class="panel">
         <div class="panel-header">
           <h3>Animales por especie</h3>
@@ -219,6 +239,7 @@
         </div>
       </div>
 
+      <!-- Animales por estado -->
       <div class="panel">
         <div class="panel-header">
           <h3>Animales por estado</h3>
@@ -236,6 +257,43 @@
 
     </div>
 
+    <div class="grid-2" style="margin-bottom:1.5rem">
+
+      <!-- Animales por tipo de especie -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Animales por tipo</h3>
+          <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)">Mamífero, Ave, Reptil...</span>
+        </div>
+        <div class="tabla-wrap">
+          <table>
+            <thead><tr><th>Tipo</th><th>Distribución</th></tr></thead>
+            <tbody id="repTablaTipo">
+              <tr><td colspan="2" style="color:rgba(245,240,232,0.3);padding:1.2rem 1rem;font-size:0.83rem;">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Rescates por tipo de incidente -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Rescates por tipo de incidente</h3>
+          <span style="font-size:0.72rem;color:rgba(245,240,232,0.3)">Global del sistema</span>
+        </div>
+        <div class="tabla-wrap">
+          <table>
+            <thead><tr><th>Tipo de incidente</th><th>Distribución</th></tr></thead>
+            <tbody id="repTablaRescatesTipo">
+              <tr><td colspan="2" style="color:rgba(245,240,232,0.3);padding:1.2rem 1rem;font-size:0.83rem;">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Actividad de veterinarios -->
     <div class="panel">
       <div class="panel-header">
         <h3>Actividad de veterinarios</h3>
@@ -245,7 +303,7 @@
         <table>
           <thead><tr><th>#</th><th>Veterinario</th><th>Último registro</th><th>Distribución</th><th>Acciones</th></tr></thead>
           <tbody id="repTablaVeterinarios">
-            <tr><td colspan="4" style="color:rgba(245,240,232,0.3);padding:1.2rem 1rem;font-size:0.83rem;">Cargando...</td></tr>
+            <tr><td colspan="5" style="color:rgba(245,240,232,0.3);padding:1.2rem 1rem;font-size:0.83rem;">Cargando...</td></tr>
           </tbody>
         </table>
       </div>
@@ -253,9 +311,9 @@
 
   </section>
 
-
 </main>
 
+<!-- ══ MODAL: VER ANIMAL ════════════════════════════════════ -->
 <div class="modal-overlay" id="modalVerAnimal">
   <div class="modal modal-lg">
     <div class="modal-header">
@@ -269,8 +327,7 @@
       </div>
       <div class="tab-content active" id="tabDatos">
         <div class="detail-grid">
-          <div class="detail-item"><label>Especie / Animal</label><span id="detEspecie">—</span></div>
-          <div class="detail-item"><label>Tipo</label><span id="detTipo">—</span></div>
+          <div class="detail-item"><label>Especie</label><span id="detEspecie">—</span></div>
           <div class="detail-item"><label>Sexo</label><span id="detSexo">—</span></div>
           <div class="detail-item"><label>Peso</label><span id="detPeso">—</span></div>
           <div class="detail-item"><label>Estado</label><span id="detEstadoAnimal">—</span></div>
@@ -289,6 +346,7 @@
   </div>
 </div>
 
+<!-- ══ MODAL: REGISTRAR ANIMAL ══════════════════════════════ -->
 <div class="modal-overlay" id="modalAnimal">
   <div class="modal">
     <div class="modal-header">
@@ -298,7 +356,7 @@
     <div class="modal-body">
       <div class="form-row">
         <div class="form-field">
-          <label>Especie / Animal</label>
+          <label>Especie</label>
           <select id="anEspecie"></select>
         </div>
         <div class="form-field">
@@ -354,6 +412,7 @@
   </div>
 </div>
 
+<!-- ══ MODAL: REGISTRAR PERSONAL ════════════════════════════ -->
 <div class="modal-overlay" id="modalPersonal">
   <div class="modal">
     <div class="modal-header">
@@ -373,14 +432,14 @@
       </div>
       <div class="form-row">
         <div class="form-field">
-          <label>Cargo <span style="color:var(--dorado)">*</span></label>
-          <input type="text" id="pCargo" placeholder="Veterinario, Cuidador..."/>
-        </div>
-        <div class="form-field">
           <label>Rol del sistema <span style="color:var(--dorado)">*</span></label>
-          <select id="pRol">
+          <select id="pRol" onchange="autocompletarCargo()">
             <option value="">Seleccionar...</option>
           </select>
+        </div>
+        <div class="form-field">
+          <label>Cargo <span style="color:var(--dorado)">*</span></label>
+          <input type="text" id="pCargo" placeholder="Se completa automáticamente o edita"/>
         </div>
       </div>
       <div class="form-row">
@@ -394,9 +453,7 @@
         </div>
       </div>
       <div style="border-top:1px solid rgba(122,181,138,0.12);margin:0.8rem 0;padding-top:0.8rem">
-        <div style="font-size:0.72rem;font-weight:700;color:rgba(245,240,232,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem">
-          Acceso al sistema
-        </div>
+        <div style="font-size:0.72rem;font-weight:700;color:rgba(245,240,232,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem">Acceso al sistema</div>
         <div class="form-row">
           <div class="form-field">
             <label>Usuario <span style="color:var(--dorado)">*</span></label>
@@ -416,6 +473,7 @@
   </div>
 </div>
 
+<!-- ══ MODAL: CREAR USUARIO ═════════════════════════════════ -->
 <div class="modal-overlay" id="modalUsuario">
   <div class="modal">
     <div class="modal-header">
@@ -451,28 +509,55 @@
   </div>
 </div>
 
-
-<div class="modal-overlay" id="modalReporteVet">
-  <div class="modal modal-lg">
+<!-- ══ MODAL: NUEVO REGISTRO MÉDICO ═════════════════════════ -->
+<div class="modal-overlay" id="modalHistorial">
+  <div class="modal">
     <div class="modal-header">
-      <h3 id="modalVetTitulo">Reporte del veterinario</h3>
-      <button class="modal-close" onclick="cerrarModal('modalReporteVet')"><i data-lucide="x"></i></button>
+      <h3>Nuevo registro médico</h3>
+      <button class="modal-close" onclick="cerrarModal('modalHistorial')"><i data-lucide="x"></i></button>
     </div>
     <div class="modal-body">
-      <div class="detail-grid" style="margin-bottom:1.2rem">
-        <div class="detail-item"><label>Centro</label><span id="modalVetCentro">—</span></div>
-        <div class="detail-item"><label>Total registros</label><span id="modalVetTotal">—</span></div>
-        <div class="detail-item"><label>Último registro</label><span id="modalVetUltimo">—</span></div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Animal</label>
+          <select id="hAnimal"></select>
+        </div>
+        <div class="form-field">
+          <label>Veterinario</label>
+          <select id="hVeterinario"></select>
+        </div>
       </div>
-      <div style="font-size:0.72rem;font-weight:700;color:rgba(245,240,232,0.3);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:0.8rem">
-        Historial médico registrado
+      <div class="form-row">
+        <div class="form-field">
+          <label>Fecha de revisión</label>
+          <input type="date" id="hFecha"/>
+        </div>
+        <div class="form-field">
+          <label>Estado de salud</label>
+          <select id="hEstadoSalud">
+            <option value="Crítico">Crítico</option>
+            <option value="Estable">Estable</option>
+            <option value="En mejora">En mejora</option>
+            <option value="Recuperado">Recuperado</option>
+          </select>
+        </div>
       </div>
-      <div id="modalVetHistorial" style="display:flex;flex-direction:column;gap:0.7rem;max-height:380px;overflow-y:auto">
-        Cargando...
+      <div class="form-field">
+        <label>Diagnóstico</label>
+        <textarea id="hDiagnostico" placeholder="Descripción del diagnóstico..."></textarea>
+      </div>
+      <div class="form-field">
+        <label>Tratamiento</label>
+        <textarea id="hTratamiento" placeholder="Tratamiento indicado..."></textarea>
+      </div>
+      <div class="form-field">
+        <label>Próxima revisión</label>
+        <input type="date" id="hProxima"/>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn-secondary" onclick="cerrarModal('modalReporteVet')">Cerrar</button>
+      <button class="btn-secondary" onclick="cerrarModal('modalHistorial')">Cancelar</button>
+      <button class="btn-primary" onclick="guardarHistorial()">Guardar registro</button>
     </div>
   </div>
 </div>
@@ -488,5 +573,42 @@
     lucide.createIcons();
   }
 </script>
+
+<!-- ══ MODAL: REPORTE VETERINARIO ══════════════════════════ -->
+<div class="modal-overlay" id="modalReporteVet">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div>
+        <h3 id="modalVetTitulo">Veterinario</h3>
+        <div style="font-size:0.75rem;color:rgba(245,240,232,0.35);margin-top:0.2rem" id="modalVetCentro"></div>
+      </div>
+      <button class="modal-close" onclick="cerrarModal('modalReporteVet')"><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body">
+      <!-- Stats rápidos -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.2rem">
+        <div style="background:rgba(122,181,138,0.07);border:1px solid rgba(122,181,138,0.12);border-radius:0.8rem;padding:1rem">
+          <div style="font-size:0.68rem;color:rgba(245,240,232,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Total registros</div>
+          <div style="font-size:1.6rem;font-weight:700;color:var(--crema)" id="modalVetTotal">—</div>
+        </div>
+        <div style="background:rgba(122,181,138,0.07);border:1px solid rgba(122,181,138,0.12);border-radius:0.8rem;padding:1rem">
+          <div style="font-size:0.68rem;color:rgba(245,240,232,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Último registro</div>
+          <div style="font-size:1.1rem;font-weight:600;color:var(--crema)" id="modalVetUltimo">—</div>
+        </div>
+      </div>
+      <!-- Historial -->
+      <div style="font-size:0.72rem;font-weight:700;color:rgba(245,240,232,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem">
+        Registros médicos
+      </div>
+      <div id="modalVetHistorial" style="display:flex;flex-direction:column;gap:0.8rem;max-height:55vh;overflow-y:auto;padding-right:0.3rem">
+        <p style="color:rgba(245,240,232,0.28);font-size:0.85rem;text-align:center;padding:2rem">Cargando...</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="cerrarModal('modalReporteVet')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

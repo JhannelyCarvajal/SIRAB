@@ -36,10 +36,29 @@ function verificarSesion() {
   usuario   = JSON.parse(sessionStorage.getItem('usuario') || 'null');
   const rol = sessionStorage.getItem('rol');
   MI_CENTRO = parseInt(sessionStorage.getItem('id_centro'));
-  if (!usuario || rol !== 'Operador') {
+
+  console.log('[SIRAB Operador] rol=', JSON.stringify(rol), '| id_rol=', usuario?.id_rol, '| centro=', MI_CENTRO);
+
+  if (!usuario) {
     window.location.href = 'login_personal.html';
     return;
   }
+
+  // Verificar por id_rol (3 = Operador en la BD) O por nombre flexible
+  const idRol = usuario.id_rol;
+  const rolNombre = (rol || '').toLowerCase();
+  const esOperador = idRol === 3
+    || rolNombre.includes('operador')
+    || rolNombre.includes('cuidador')
+    || rolNombre.includes('operator');
+
+  if (!esOperador) {
+    console.warn('[SIRAB] No es operador. rol=', rol, 'id_rol=', idRol);
+    window.location.href = 'login_personal.html';
+    return;
+  }
+
+  MI_CENTRO = isNaN(MI_CENTRO) ? 0 : MI_CENTRO;
   document.getElementById('sidebarNombre').textContent =
     usuario.nombre_personal || usuario.username;
 }
@@ -67,7 +86,7 @@ async function cargarTodo() {
 // ── CENTRO INFO ───────────────────────────────────────────
 async function cargarCentroInfo() {
   try {
-    const res    = await apiFetch(`/centros/centros/${MI_CENTRO}`);
+    const res    = await apiFetch(`/centros/${MI_CENTRO}`);
     const centro = await res.json();
     document.getElementById('sidebarCentro').textContent = centro.nombre || `Centro #${MI_CENTRO}`;
   } catch(e) {
@@ -253,36 +272,165 @@ async function verFichaAnimal(id) {
 
 function horarioAlimentacion(a) {
   const estado = (a.estado_actual || '').toLowerCase();
-  let comidas = [];
+  // Horario guardado manualmente o generado por estado
+  const guardado = getHorarioGuardado(a.id_animal);
+  let comidas = guardado || [];
 
-  if (estado.includes('tratamiento') || estado.includes('critico')) {
-    comidas = [
-      { hora: '07:00', label: 'Mañana',   detalle: 'Dieta blanda + medicación' },
-      { hora: '12:00', label: 'Mediodía', detalle: 'Porción reducida' },
-      { hora: '17:00', label: 'Tarde',    detalle: 'Dieta blanda + hidratación' },
-      { hora: '21:00', label: 'Noche',    detalle: 'Suplemento proteico' },
-    ];
-  } else if (estado.includes('rehabilitaci')) {
-    comidas = [
-      { hora: '07:00', label: 'Mañana',   detalle: 'Alimentación principal' },
-      { hora: '13:00', label: 'Mediodía', detalle: 'Snack / enriquecimiento' },
-      { hora: '18:00', label: 'Tarde',    detalle: 'Alimentación secundaria' },
-    ];
-  } else {
-    comidas = [
-      { hora: '08:00', label: 'Mañana', detalle: 'Alimentación principal' },
-      { hora: '18:00', label: 'Tarde',  detalle: 'Alimentación secundaria' },
-    ];
+  if (!comidas.length) {
+    if (estado.includes('tratamiento') || estado.includes('critico')) {
+      comidas = [
+        { hora: '07:00', label: 'Mañana',   detalle: 'Dieta blanda + medicación' },
+        { hora: '12:00', label: 'Mediodía', detalle: 'Porción reducida' },
+        { hora: '17:00', label: 'Tarde',    detalle: 'Dieta blanda + hidratación' },
+        { hora: '21:00', label: 'Noche',    detalle: 'Suplemento proteico' },
+      ];
+    } else if (estado.includes('rehabilitaci')) {
+      comidas = [
+        { hora: '07:00', label: 'Mañana',   detalle: 'Alimentación principal' },
+        { hora: '13:00', label: 'Mediodía', detalle: 'Snack / enriquecimiento' },
+        { hora: '18:00', label: 'Tarde',    detalle: 'Alimentación secundaria' },
+      ];
+    } else {
+      comidas = [
+        { hora: '08:00', label: 'Mañana', detalle: 'Alimentación principal' },
+        { hora: '18:00', label: 'Tarde',  detalle: 'Alimentación secundaria' },
+      ];
+    }
   }
 
-  return `<div class="horario-grid" style="grid-template-columns:repeat(${comidas.length},1fr)">
-    ${comidas.map(c => `
-      <div class="horario-card">
-        <div class="horario-hora">${c.hora}</div>
-        <div class="horario-label">${c.label}</div>
-        <div class="horario-detalle">${c.detalle}</div>
-      </div>`).join('')}
-  </div>`;
+  return `
+    <div class="horario-grid" style="grid-template-columns:repeat(${comidas.length},1fr)" id="horarioGrid_${a.id_animal}">
+      ${comidas.map((c, i) => `
+        <div class="horario-card">
+          <div class="horario-hora">${c.hora}</div>
+          <div class="horario-label">${c.label}</div>
+          <div class="horario-detalle">${c.detalle}</div>
+        </div>`).join('')}
+    </div>
+    <button onclick="abrirEditarHorario(${a.id_animal})" style="margin-top:0.6rem;background:transparent;border:1px solid rgba(122,181,138,0.25);color:var(--verde-claro);border-radius:0.5rem;padding:0.3rem 0.8rem;font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:0.4rem">
+      <i data-lucide="pencil" style="width:11px;height:11px"></i> Editar horario
+    </button>`;
+}
+
+function getHorarioGuardado(id_animal) {
+  try {
+    const d = sessionStorage.getItem(`horario_${id_animal}`);
+    return d ? JSON.parse(d) : null;
+  } catch { return null; }
+}
+
+function abrirEditarHorario(id_animal) {
+  const a = animalesCentro.find(x => x.id_animal === id_animal);
+  if (!a) return;
+
+  const estado = (a.estado_actual || '').toLowerCase();
+  const guardado = getHorarioGuardado(id_animal);
+  let comidas = guardado || [];
+  if (!comidas.length) {
+    if (estado.includes('tratamiento')) {
+      comidas = [
+        { hora: '07:00', label: 'Mañana',   detalle: 'Dieta blanda + medicación' },
+        { hora: '12:00', label: 'Mediodía', detalle: 'Porción reducida' },
+        { hora: '17:00', label: 'Tarde',    detalle: 'Dieta blanda + hidratación' },
+        { hora: '21:00', label: 'Noche',    detalle: 'Suplemento proteico' },
+      ];
+    } else if (estado.includes('rehabilitaci')) {
+      comidas = [
+        { hora: '07:00', label: 'Mañana',   detalle: 'Alimentación principal' },
+        { hora: '13:00', label: 'Mediodía', detalle: 'Snack / enriquecimiento' },
+        { hora: '18:00', label: 'Tarde',    detalle: 'Alimentación secundaria' },
+      ];
+    } else {
+      comidas = [
+        { hora: '08:00', label: 'Mañana', detalle: 'Alimentación principal' },
+        { hora: '18:00', label: 'Tarde',  detalle: 'Alimentación secundaria' },
+      ];
+    }
+  }
+
+  // Crear modal dinámico de edición
+  const existente = document.getElementById('modalHorario');
+  if (existente) existente.remove();
+
+  const filas = comidas.map((c, i) => `
+    <div style="display:grid;grid-template-columns:90px 1fr 1fr auto;gap:0.5rem;align-items:center;margin-bottom:0.5rem">
+      <input type="time" value="${c.hora}" id="hHora_${i}" style="background:rgba(245,240,232,0.06);border:1px solid rgba(245,240,232,0.12);border-radius:0.5rem;padding:0.4rem 0.6rem;color:inherit;font-family:'DM Sans',sans-serif;font-size:0.82rem"/>
+      <input type="text" value="${c.label}" id="hLabel_${i}" placeholder="Ej: Mañana" style="background:rgba(245,240,232,0.06);border:1px solid rgba(245,240,232,0.12);border-radius:0.5rem;padding:0.4rem 0.6rem;color:inherit;font-family:'DM Sans',sans-serif;font-size:0.82rem"/>
+      <input type="text" value="${c.detalle}" id="hDetalle_${i}" placeholder="Descripción" style="background:rgba(245,240,232,0.06);border:1px solid rgba(245,240,232,0.12);border-radius:0.5rem;padding:0.4rem 0.6rem;color:inherit;font-family:'DM Sans',sans-serif;font-size:0.82rem"/>
+      <button onclick="eliminarFilaHorario(${i})" style="background:transparent;border:none;color:rgba(245,240,232,0.3);cursor:pointer;font-size:1rem;padding:0.2rem 0.4rem" title="Eliminar">✕</button>
+    </div>`).join('');
+
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay visible';
+  modal.id = 'modalHorario';
+  modal.innerHTML = `
+    <div class="modal" style="max-width:560px">
+      <div class="modal-header">
+        <h3>Editar horario — ${apodo(a)}</h3>
+        <button class="modal-close" onclick="document.getElementById('modalHorario').remove()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:0.72rem;color:rgba(245,240,232,0.3);margin-bottom:0.8rem">
+          Edita hora, nombre y descripción de cada comida
+        </div>
+        <div id="filasHorario">${filas}</div>
+        <button onclick="agregarFilaHorario()" style="margin-top:0.4rem;background:transparent;border:1px dashed rgba(122,181,138,0.3);color:var(--verde-claro);border-radius:0.5rem;padding:0.3rem 0.8rem;font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif">
+          + Agregar comida
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="document.getElementById('modalHorario').remove()">Cancelar</button>
+        <button class="btn-primary" onclick="guardarHorario(${id_animal})">
+          <i data-lucide="save" style="width:13px;height:13px"></i> Guardar horario
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  lucide.createIcons();
+}
+
+function agregarFilaHorario() {
+  const filas = document.getElementById('filasHorario');
+  const i = filas.querySelectorAll('input[type="time"]').length;
+  const div = document.createElement('div');
+  div.style.cssText = 'display:grid;grid-template-columns:90px 1fr 1fr auto;gap:0.5rem;align-items:center;margin-bottom:0.5rem';
+  div.innerHTML = `
+    <input type="time" value="12:00" id="hHora_${i}" style="background:rgba(245,240,232,0.06);border:1px solid rgba(245,240,232,0.12);border-radius:0.5rem;padding:0.4rem 0.6rem;color:inherit;font-family:'DM Sans',sans-serif;font-size:0.82rem"/>
+    <input type="text" value="" id="hLabel_${i}" placeholder="Ej: Mediodía" style="background:rgba(245,240,232,0.06);border:1px solid rgba(245,240,232,0.12);border-radius:0.5rem;padding:0.4rem 0.6rem;color:inherit;font-family:'DM Sans',sans-serif;font-size:0.82rem"/>
+    <input type="text" value="" id="hDetalle_${i}" placeholder="Descripción" style="background:rgba(245,240,232,0.06);border:1px solid rgba(245,240,232,0.12);border-radius:0.5rem;padding:0.4rem 0.6rem;color:inherit;font-family:'DM Sans',sans-serif;font-size:0.82rem"/>
+    <button onclick="this.parentElement.remove()" style="background:transparent;border:none;color:rgba(245,240,232,0.3);cursor:pointer;font-size:1rem;padding:0.2rem 0.4rem" title="Eliminar">✕</button>`;
+  filas.appendChild(div);
+}
+
+function eliminarFilaHorario(i) {
+  const filas = document.getElementById('filasHorario');
+  const divs = filas.children;
+  if (divs[i]) divs[i].remove();
+}
+
+function guardarHorario(id_animal) {
+  const filas = document.getElementById('filasHorario');
+  const horas   = filas.querySelectorAll('input[type="time"]');
+  const labels  = filas.querySelectorAll('input[placeholder^="Ej"]');
+  const detalles= filas.querySelectorAll('input[placeholder="Descripción"]');
+
+  const comidas = [];
+  for (let i = 0; i < horas.length; i++) {
+    const hora   = horas[i].value;
+    const label  = labels[i]?.value.trim() || '';
+    const detalle= detalles[i]?.value.trim() || '';
+    if (hora) comidas.push({ hora, label, detalle });
+  }
+
+  sessionStorage.setItem(`horario_${id_animal}`, JSON.stringify(comidas));
+  document.getElementById('modalHorario').remove();
+  toast('Horario guardado', 'exito');
+
+  // Refrescar ficha si sigue abierta
+  const a = animalesCentro.find(x => x.id_animal === id_animal);
+  if (a && document.getElementById('modalFichaAnimal').classList.contains('visible')) {
+    verFichaAnimal(id_animal);
+  }
 }
 
 function editarDesdeficha() {
@@ -363,7 +511,7 @@ async function guardarAnimal() {
 // en esta sesión (guardamos id_rescate al crear).
 async function cargarRescates() {
   try {
-    const res  = await apiFetch('/rescates/rescates');
+    const res  = await apiFetch('/rescates/');
     const todos = await res.json();
 
     // IDs de rescates vinculados a animales de este centro
@@ -483,7 +631,7 @@ async function guardarRescate() {
 
     // 2. Si hay especie, crear el animal vinculado al rescate
     if (id_especie) {
-      const resA = await apiFetch('/animales/animales', {
+      const resA = await apiFetch('/animales/', {
         method: 'POST',
         body: JSON.stringify({
           id_especie,
@@ -546,10 +694,15 @@ function abrirModalEditarRescate(id) {
 // ── HISTORIAL ─────────────────────────────────────────────
 async function cargarHistorial() {
   try {
-    const res   = await apiFetch('/historial-medico/');
-    const todos = await res.json();
-    const idsAnimales = new Set(animalesCentro.map(a => a.id_animal));
-    historialCentro = todos.filter(h => idsAnimales.has(h.id_animal));
+    // No existe GET /historial-medico/ — se carga por cada animal del centro
+    const arrays = await Promise.all(
+      animalesCentro.map(a =>
+        apiFetch(`/historial-medico/animal/${a.id_animal}`)
+          .then(r => r.ok ? r.json() : [])
+          .catch(() => [])
+      )
+    );
+    historialCentro = arrays.flat();
     document.getElementById('statHistorial').textContent = historialCentro.length;
     renderHistorial(historialCentro);
   } catch(e) {
@@ -629,7 +782,7 @@ function mostrarSeccion(id, navEl) {
 }
 
 function cerrarSesion() {
-  sessionStorage.clear();
+  localStorage.clear(); sessionStorage.clear();
   window.location.href = 'login_personal.html';
 }
 
