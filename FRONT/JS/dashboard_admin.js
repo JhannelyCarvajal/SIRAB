@@ -199,7 +199,7 @@ function accionDesdeModal(estado) {
   if (centroActual) cambiarEstado(centroActual.id_centro, estado);
 }
 
-// ── USUARIOS ──────────────────────────────────────────────
+
 async function cargarUsuarios() {
   try {
     const res      = await apiFetch('/usuarios/');
@@ -262,7 +262,7 @@ async function eliminarUsuario(id, username) {
   } catch(e) { toast('Error al eliminar usuario', 'error'); }
 }
 
-// ── ROLES ─────────────────────────────────────────────────
+
 async function cargarRoles() {
   try {
     const res   = await apiFetch('/roles/');
@@ -291,7 +291,7 @@ async function cargarRoles() {
   }
 }
 
-// ── REPORTES GLOBALES ─────────────────────────────────────
+
 async function cargarReportes() {
   try {
     const [r1, r2, r3] = await Promise.all([
@@ -303,7 +303,7 @@ async function cargarReportes() {
     const porCentro = await r2.json();
     const porEstado = await r3.json();
 
-    // Centros por estado
+
     const aprobados  = centros.filter(c => c.estado === 'aprobado').length;
     const pendientes = centros.filter(c => c.estado === 'pendiente').length;
     const rechazados = centros.filter(c => c.estado === 'rechazado').length;
@@ -325,8 +325,8 @@ async function cargarReportes() {
         </td>
       </tr>`).join('');
 
-    // Centros por departamento
-    const porDepto = {};
+
+      const porDepto = {};
     centros.filter(c => c.nombre !== 'SIRAB Central').forEach(c => {
       porDepto[c.departamento] = (porDepto[c.departamento] || 0) + 1;
     });
@@ -346,8 +346,8 @@ async function cargarReportes() {
         </td>
       </tr>`).join('') || emptyRow(3, 'Sin datos');
 
-    // Rescates por centro
-    const maxR = Math.max(...porCentro.map(r => r.cantidad_rescates || 0), 1);
+
+      const maxR = Math.max(...porCentro.map(r => r.cantidad_rescates || 0), 1);
     document.getElementById('tablaRepRescates').innerHTML = porCentro.length
       ? porCentro.map((r, i) => `
           <tr>
@@ -364,8 +364,8 @@ async function cargarReportes() {
           </tr>`).join('')
       : emptyRow(3, 'Sin datos');
 
-    // Animales por estado
-    const maxE = Math.max(...porEstado.map(r => r.cantidad || 0), 1);
+
+      const maxE = Math.max(...porEstado.map(r => r.cantidad || 0), 1);
     document.getElementById('tablaRepEstado').innerHTML = porEstado.length
       ? porEstado.map(r => `
           <tr>
@@ -384,7 +384,7 @@ async function cargarReportes() {
   } catch(e) { console.error('Error reportes:', e); }
 }
 
-// ── REPORTES CENTROS ──────────────────────────────────────
+
 async function cargarReporteCentros() {
   const contenedor = document.getElementById('listaCentrosReporte');
   try {
@@ -426,7 +426,7 @@ async function verDetalleCentro(id) {
   const centro = todosLosCentros.find(c => c.id_centro === id);
   if (!centro) return;
 
-  // Mostrar panel con datos básicos
+
   document.getElementById('repCentroNombre').textContent    = centro.nombre;
   document.getElementById('repCentroDepto').textContent     = centro.departamento;
   document.getElementById('repCentroDireccion').textContent = centro.direccion || '—';
@@ -436,10 +436,10 @@ async function verDetalleCentro(id) {
   document.getElementById('panelDetalleCentro').style.display = 'block';
   document.getElementById('listaCentrosReporte').style.display = 'none';
 
-  // Scrollear al detalle
+
   document.getElementById('panelDetalleCentro').scrollIntoView({ behavior:'smooth', block:'start' });
 
-  // Poner en cargando
+
   ['repTablaEspecie','repTablaEstado','repTablaPersonal'].forEach(t => {
     document.getElementById(t).innerHTML = `<tr class="loading-row"><td colspan="3">Cargando...</td></tr>`;
   });
@@ -463,7 +463,7 @@ async function verDetalleCentro(id) {
     document.getElementById('repCentroRehab').textContent    = `${rehab} en rehabilitación`;
     lucide.createIcons();
 
-    // Tabla animales por especie
+
     const porEspecie = {};
     animales.forEach(a => {
       const esp = a.tipo_especie || a.especie || 'Sin especie';
@@ -485,8 +485,8 @@ async function verDetalleCentro(id) {
           </tr>`).join('')
       : emptyRow(2, 'Sin animales registrados');
 
-    // Tabla animales por estado
-    const porEstAnim = {};
+
+      const porEstAnim = {};
     animales.forEach(a => {
       const est = a.estado_actual || 'Sin estado';
       porEstAnim[est] = (porEstAnim[est] || 0) + 1;
@@ -507,8 +507,8 @@ async function verDetalleCentro(id) {
           </tr>`).join('')
       : emptyRow(2, 'Sin animales');
 
-    // Tabla personal
-    document.getElementById('repTablaPersonal').innerHTML = personal.length
+
+      document.getElementById('repTablaPersonal').innerHTML = personal.length
       ? personal.map(p => {
           const usu = usuarios.find(u => u.id_personal === p.id_personal);
           return `
@@ -533,7 +533,7 @@ function cerrarDetalleCentro() {
   document.getElementById('listaCentrosReporte').style.display = 'block';
 }
 
-// ── UI ────────────────────────────────────────────────────
+
 const titulos = {
   'estadisticas': ['Estadísticas globales',   'Vista general del sistema SIRAB'],
   'centros':      ['Todos los centros',        'Gestión de centros de rescate'],

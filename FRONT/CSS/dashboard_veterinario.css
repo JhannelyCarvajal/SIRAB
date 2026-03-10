@@ -149,7 +149,7 @@ body {
 .btn-logout:hover { background: rgba(212,100,90,0.18); }
 .btn-logout .lucide { width: 15px; height: 15px; stroke: #f0a09a; }
 
-/* ══ MAIN ═══════════════════════════════════════════════════ */
+
 .main {
   margin-left: var(--sidebar-w);
   flex: 1; height: 100vh; overflow-y: auto;
@@ -159,7 +159,7 @@ body {
     var(--fondo);
 }
 
-/* Topbar */
+
 .topbar {
   padding: 1.1rem 2rem;
   display: flex; align-items: center; justify-content: space-between;

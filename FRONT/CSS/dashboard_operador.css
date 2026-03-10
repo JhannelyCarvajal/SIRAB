@@ -1,4 +1,4 @@
-/* ── VARIABLES ───────────────────────────────────────────── */
+
 :root {
   --verde-oscuro:  #0d1f14;
   --verde-panel:   #111f17;
@@ -25,7 +25,7 @@ body {
   overflow: hidden;
 }
 
-/* ── SIDEBAR ─────────────────────────────────────────────── */
+
 .sidebar {
   width: 220px;
   flex-shrink: 0;
@@ -124,7 +124,7 @@ body {
 }
 .btn-logout:hover { border-color: var(--error); color: var(--error); }
 
-/* ── MAIN ─────────────────────────────────────────────────── */
+
 .main {
   flex: 1;
   display: flex;
@@ -145,11 +145,11 @@ body {
 .topbar-sub { font-size: 0.72rem; color: rgba(245,240,232,0.35); margin-top: 0.15rem; }
 .topbar-date { font-size: 0.72rem; color: rgba(245,240,232,0.25); }
 
-/* ── SECCIONES ───────────────────────────────────────────── */
+
 .seccion { display: none; flex: 1; overflow-y: auto; padding: 1.4rem 1.8rem; }
 .seccion.active { display: block; }
 
-/* ── STATS ───────────────────────────────────────────────── */
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -177,7 +177,7 @@ body {
 .stat-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(245,240,232,0.3); }
 .stat-sub   { font-size: 0.72rem; color: var(--verde-claro); margin-top: 0.25rem; }
 
-/* ── PANEL ───────────────────────────────────────────────── */
+
 .panel {
   background: var(--verde-panel);
   border: 1px solid var(--verde-borde);
@@ -195,7 +195,7 @@ body {
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem; }
 
-/* ── TABLA ───────────────────────────────────────────────── */
+
 .tabla-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
 thead th {
@@ -209,7 +209,7 @@ tbody tr:last-child td { border-bottom: none; }
 tbody tr:hover td { background: rgba(122,181,138,0.03); }
 .loading-row td { color: rgba(245,240,232,0.2); font-size: 0.8rem; padding: 1.5rem; text-align: center; }
 
-/* ── BOTONES ─────────────────────────────────────────────── */
+
 .btn-primary {
   padding: 0.55rem 1.1rem;
   background: var(--verde-musgo);
@@ -240,7 +240,7 @@ tbody tr:hover td { background: rgba(122,181,138,0.03); }
 .btn-editar  { background: rgba(201,168,76,0.12); color: var(--dorado); }
 .btn-editar:hover { background: rgba(201,168,76,0.22); }
 
-/* ── BADGES ──────────────────────────────────────────────── */
+
 .badge {
   display: inline-flex; align-items: center; gap: 0.3rem;
   padding: 0.2rem 0.55rem; border-radius: 20px;
@@ -253,7 +253,7 @@ tbody tr:hover td { background: rgba(122,181,138,0.03); }
 .badge-azul     { background: rgba(100,140,200,0.12); color: #8ab0e8; border: 1px solid rgba(100,140,200,0.2); }
 .badge-gris     { background: rgba(245,240,232,0.06); color: rgba(245,240,232,0.4); border: 1px solid rgba(245,240,232,0.1); }
 
-/* ── MODAL ───────────────────────────────────────────────── */
+
 .modal-overlay {
   display: none; position: fixed; inset: 0;
   background: rgba(0,0,0,0.7); z-index: 1000;
@@ -288,7 +288,7 @@ tbody tr:hover td { background: rgba(122,181,138,0.03); }
   display: flex; justify-content: flex-end; gap: 0.6rem;
 }
 
-/* ── FICHA ANIMAL ────────────────────────────────────────── */
+
 .ficha-header {
   display: flex; gap: 1.2rem; align-items: flex-start;
   margin-bottom: 1.2rem;
@@ -321,7 +321,7 @@ tbody tr:hover td { background: rgba(122,181,138,0.03); }
   line-height: 1.5;
 }
 
-/* ── HORARIO ─────────────────────────────────────────────── */
+
 .horario-grid {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem;
   margin-top: 0.8rem;
@@ -339,7 +339,7 @@ tbody tr:hover td { background: rgba(122,181,138,0.03); }
 .horario-label { font-size: 0.7rem; color: rgba(245,240,232,0.35); margin-top: 0.2rem; }
 .horario-detalle { font-size: 0.75rem; color: rgba(245,240,232,0.5); margin-top: 0.4rem; }
 
-/* ── FORM ────────────────────────────────────────────────── */
+
 .form-row { display: flex; gap: 1rem; margin-bottom: 1rem; }
 .form-field { flex: 1; display: flex; flex-direction: column; gap: 0.4rem; }
 .form-field label { font-size: 0.72rem; font-weight: 600; color: rgba(245,240,232,0.5); letter-spacing: 0.05em; }
@@ -363,7 +363,7 @@ tbody tr:hover td { background: rgba(122,181,138,0.03); }
   margin-bottom: 0.8rem;
 }
 
-/* ── SEARCH ──────────────────────────────────────────────── */
+
 .search-bar {
   display: flex; gap: 0.7rem; margin-bottom: 1rem; align-items: center;
 }
@@ -386,7 +386,7 @@ tbody tr:hover td { background: rgba(122,181,138,0.03); }
 .filter-select:focus { outline: none; }
 .filter-select option { background: #1a3022; }
 
-/* ── HISTORIAL ───────────────────────────────────────────── */
+
 .historial-item {
   padding: 0.9rem 1rem;
   border-bottom: 1px solid rgba(122,181,138,0.06);
@@ -402,13 +402,13 @@ tbody tr:hover td { background: rgba(122,181,138,0.03); }
 .hist-vet    { font-size: 0.72rem; color: rgba(245,240,232,0.35); margin-top: 0.1rem; }
 .hist-diag   { font-size: 0.8rem; color: rgba(245,240,232,0.55); margin-top: 0.4rem; line-height: 1.4; }
 
-/* ── EMPTY STATE ─────────────────────────────────────────── */
+
 .empty-state {
   text-align: center; padding: 2.5rem 1rem;
   color: rgba(245,240,232,0.2); font-size: 0.85rem;
 }
 
-/* ── TOAST ───────────────────────────────────────────────── */
+
 .toast {
   padding: 0.65rem 1rem;
   border-radius: 8px; font-size: 0.82rem;

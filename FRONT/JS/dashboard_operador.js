@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// ── SESIÓN ────────────────────────────────────────────────
+
 function verificarSesion() {
   usuario   = JSON.parse(sessionStorage.getItem('usuario') || 'null');
   const rol = sessionStorage.getItem('rol');
@@ -44,7 +44,7 @@ function verificarSesion() {
     return;
   }
 
-  // Verificar por id_rol (3 = Operador en la BD) O por nombre flexible
+
   const idRol = usuario.id_rol;
   const rolNombre = (rol || '').toLowerCase();
   const esOperador = idRol === 3
@@ -71,7 +71,7 @@ function mostrarFecha() {
 }
 
 async function cargarTodo() {
-  // Primero animales, luego el resto en paralelo (historial depende de animalesCentro)
+
   await Promise.all([
     cargarCentroInfo(),
     cargarEspecies(),
@@ -83,7 +83,7 @@ async function cargarTodo() {
   ]);
 }
 
-// ── CENTRO INFO ───────────────────────────────────────────
+
 async function cargarCentroInfo() {
   try {
     const res    = await apiFetch(`/centros/${MI_CENTRO}`);
@@ -94,7 +94,7 @@ async function cargarCentroInfo() {
   }
 }
 
-// ── ANIMALES ──────────────────────────────────────────────
+
 async function cargarAnimales() {
   try {
     const res   = await apiFetch('/animales/');
@@ -161,7 +161,7 @@ function actualizarStats() {
   document.getElementById('statRehab').textContent    = `${rehab} en rehabilitación`;
   document.getElementById('statCriticos').textContent = trat;
 
-  // Top 5 recientes
+
   const ultimos = [...animalesCentro]
     .sort((a, b) => new Date(b.fecha_ingreso || 0) - new Date(a.fecha_ingreso || 0))
     .slice(0, 5);
@@ -175,8 +175,8 @@ function actualizarStats() {
         </tr>`).join('')
     : emptyRow(4, 'Sin animales');
 
-  // Distribución por estado
-  const porEstado = {};
+
+    const porEstado = {};
   animalesCentro.forEach(a => {
     const est = a.estado_actual || 'Sin estado';
     porEstado[est] = (porEstado[est] || 0) + 1;
@@ -196,7 +196,7 @@ function actualizarStats() {
       </div>`).join('') || '<p style="color:rgba(245,240,232,0.2);font-size:0.82rem">Sin datos</p>';
 }
 
-// ── FICHA ANIMAL ──────────────────────────────────────────
+
 async function verFichaAnimal(id) {
   const a = animalesCentro.find(x => x.id_animal === id);
   if (!a) return;
@@ -216,7 +216,7 @@ async function verFichaAnimal(id) {
   const ultimoReg  = [...histAnimal].sort((a, b) =>
     new Date(b.fecha_revision) - new Date(a.fecha_revision))[0];
 
-  // Rescate vinculado
+
   const rescateVinculado = rescatesCentro.find(r => r.id_rescate === a.id_rescate);
 
   document.getElementById('fichaAnimalBody').innerHTML = `
@@ -272,7 +272,7 @@ async function verFichaAnimal(id) {
 
 function horarioAlimentacion(a) {
   const estado = (a.estado_actual || '').toLowerCase();
-  // Horario guardado manualmente o generado por estado
+
   const guardado = getHorarioGuardado(a.id_animal);
   let comidas = guardado || [];
 
@@ -348,7 +348,7 @@ function abrirEditarHorario(id_animal) {
     }
   }
 
-  // Crear modal dinámico de edición
+
   const existente = document.getElementById('modalHorario');
   if (existente) existente.remove();
 
@@ -426,7 +426,7 @@ function guardarHorario(id_animal) {
   document.getElementById('modalHorario').remove();
   toast('Horario guardado', 'exito');
 
-  // Refrescar ficha si sigue abierta
+
   const a = animalesCentro.find(x => x.id_animal === id_animal);
   if (a && document.getElementById('modalFichaAnimal').classList.contains('visible')) {
     verFichaAnimal(id_animal);
@@ -439,7 +439,7 @@ function editarDesdeficha() {
   abrirModalAnimal(animalFichaActual.id_animal);
 }
 
-// ── CRUD ANIMALES ─────────────────────────────────────────
+
 function abrirModalAnimal(id = null) {
   animalEditandoId = id;
   document.getElementById('modalAnimalTitulo').textContent = id ? 'Editar animal' : 'Nuevo animal';
@@ -505,21 +505,18 @@ async function guardarAnimal() {
   } catch(e) { toast(e.message, 'error'); }
 }
 
-// ── RESCATES ──────────────────────────────────────────────
-// FIX: la tabla rescates NO tiene id_centro — filtramos por los rescates
-// cuyo id_rescate aparece en algún animal de este centro, MÁS los creados
-// en esta sesión (guardamos id_rescate al crear).
+
 async function cargarRescates() {
   try {
     const res  = await apiFetch('/rescates/');
     const todos = await res.json();
 
-    // IDs de rescates vinculados a animales de este centro
+
     const idsVinculados = new Set(
       animalesCentro.map(a => a.id_rescate).filter(Boolean)
     );
 
-    // También incluir los que guardamos localmente en esta sesión
+
     const locales = JSON.parse(sessionStorage.getItem('rescates_creados') || '[]');
     locales.forEach(id => idsVinculados.add(id));
 
@@ -544,7 +541,7 @@ function renderTablaRescates() {
     ? [...rescatesCentro]
         .sort((a, b) => new Date(b.fecha_rescate || 0) - new Date(a.fecha_rescate || 0))
         .map(r => {
-          // Buscar animal vinculado a este rescate
+
           const animal = animalesCentro.find(a => a.id_rescate === r.id_rescate);
           const animalTexto = animal
             ? `<span style="cursor:pointer;color:var(--verde-claro)" onclick="verFichaAnimal(${animal.id_animal})">${apodo(animal)}</span>`
@@ -575,7 +572,7 @@ function abrirModalRescate() {
   document.getElementById('rEstadoAnimal').value = 'En rehabilitación';
   document.getElementById('rNacimiento').value   = '';
 
-  // Poblar select de especies
+
   const selAnimal = document.getElementById('rAnimal');
   selAnimal.innerHTML = '<option value="">Desconocida</option>' +
     especiesLista.map(e =>
@@ -602,7 +599,7 @@ async function guardarRescate() {
   }
 
   try {
-    // 1. Crear el rescate
+
     const resR = await apiFetch('/rescates/', {
       method: 'POST',
       body: JSON.stringify({
@@ -624,12 +621,12 @@ async function guardarRescate() {
     }
     const rescate = await resR.json();
 
-    // Guardar id localmente para filtrado
+
     const locales = JSON.parse(sessionStorage.getItem('rescates_creados') || '[]');
     locales.push(rescate.id_rescate);
     sessionStorage.setItem('rescates_creados', JSON.stringify(locales));
 
-    // 2. Si hay especie, crear el animal vinculado al rescate
+
     if (id_especie) {
       const resA = await apiFetch('/animales/', {
         method: 'POST',
@@ -646,7 +643,7 @@ async function guardarRescate() {
         })
       });
       if (!resA.ok) {
-        // El rescate se creó OK, solo el animal falló
+
         const err = await resA.json().catch(() => ({}));
         toast(`Rescate creado pero error al registrar animal: ${typeof err.detail === 'string' ? err.detail : JSON.stringify(err)}`, 'error');
       } else {
@@ -662,7 +659,7 @@ async function guardarRescate() {
   } catch(e) { toast(e.message, 'error'); }
 }
 
-// Editar rescate existente
+
 let rescateEditandoId = null;
 function abrirModalEditarRescate(id) {
   const r = rescatesCentro.find(x => x.id_rescate === id);
@@ -674,7 +671,7 @@ function abrirModalEditarRescate(id) {
   document.getElementById('rFecha').value       = r.fecha_rescate?.substring(0, 10) || '';
   document.getElementById('rDescripcion').value = r.descripcion || '';
 
-  // Animal vinculado si existe
+
   const animal = animalesCentro.find(a => a.id_rescate === id);
   const selAnimal = document.getElementById('rAnimal');
   selAnimal.innerHTML = '<option value="">Desconocida</option>' +
@@ -691,10 +688,10 @@ function abrirModalEditarRescate(id) {
   abrirModal('modalRescate');
 }
 
-// ── HISTORIAL ─────────────────────────────────────────────
+
 async function cargarHistorial() {
   try {
-    // No existe GET /historial-medico/ — se carga por cada animal del centro
+
     const arrays = await Promise.all(
       animalesCentro.map(a =>
         apiFetch(`/historial-medico/animal/${a.id_animal}`)
@@ -749,8 +746,8 @@ function filtrarHistorial() {
   renderHistorial(filtrado);
 }
 
-// ── MI PERFIL ─────────────────────────────────────────────
-// ── ESPECIES ──────────────────────────────────────────────
+
+
 async function cargarEspecies() {
   try {
     const res = await apiFetch('/especies/');
@@ -763,7 +760,7 @@ async function cargarEspecies() {
   } catch(e) { console.warn('No se pudieron cargar especies'); }
 }
 
-// ── UI / NAVEGACIÓN ───────────────────────────────────────
+
 const titulos = {
   resumen:   ['Resumen',          'Vista general de tu centro'],
   animales:  ['Animales',         'Gestión de animales del centro'],
@@ -789,7 +786,7 @@ function cerrarSesion() {
 function abrirModal(id)  { document.getElementById(id).classList.add('visible'); }
 function cerrarModal(id) { document.getElementById(id).classList.remove('visible'); }
 
-// ── HELPERS ───────────────────────────────────────────────
+
 function toast(msg, tipo = 'info') {
   const cont = document.getElementById('toastContainer');
   const el   = document.createElement('div');

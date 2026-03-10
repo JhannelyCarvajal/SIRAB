@@ -125,10 +125,10 @@ async function iniciarSesion() {
 
 function redirigirPorRol(rol) {
   const rutas = {
-    'Admin':         'dashboard_admin.html',        // ← Superadmin
-    'Administrador': 'dashboard_centro.html',       // ← Admin de centro (futuro)
-    'Veterinario':   'dashboard_veterinario.html',  // ← futuro
-    'Operador':      'dashboard_operador.html',     // ← futuro
+    'Admin':         'dashboard_admin.html',       
+    'Administrador': 'dashboard_centro.html',       
+    'Veterinario':   'dashboard_veterinario.html',  
+    'Operador':      'dashboard_operador.html',     
   };
   const destino = rutas[rol] || 'dashboard.html';
   window.location.href = destino;

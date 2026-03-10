@@ -10,7 +10,7 @@ let historialMio   = [];
 let rescatesCentro = [];
 let especiesLista  = [];
 
-// ── Helper con token ──────────────────────────────────────
+
 function apiFetch(url, opts = {}) {
   const token = sessionStorage.getItem('token');
   return fetch(`${API}${url}`, {
@@ -59,8 +59,8 @@ function mostrarFecha() {
 async function cargarTodo() {
   await cargarEspecies();
   await cargarNombreCentro();
-  await cargarAnimalesYHistorial(); // primero animales
-  await cargarRescates();           // rescates después — necesita animalesCentro llenado
+  await cargarAnimalesYHistorial();
+  await cargarRescates();           
 }
 
 async function cargarNombreCentro() {
@@ -83,7 +83,7 @@ async function cargarAnimalesYHistorial() {
     const todosAnimales = await animalesRes.json();
     animalesCentro = todosAnimales.filter(a => a.id_centro === MI_CENTRO);
 
-    // No existe GET /historial_medico/ — se carga por animal
+
     const historialArrays = await Promise.all(
       animalesCentro.map(a =>
         apiFetch(`/historial-medico/animal/${a.id_animal}`)
@@ -93,7 +93,7 @@ async function cargarAnimalesYHistorial() {
     );
     const todoHistorial = historialArrays.flat();
 
-    // Solo los registros creados por este veterinario
+
     historialMio = todoHistorial.filter(h => h.id_personal === MI_ID);
 
     const idsAnimalesMios = [...new Set(historialMio.map(h => h.id_animal))];
@@ -108,7 +108,7 @@ async function cargarAnimalesYHistorial() {
   }
 }
 
-// ── STATS ─────────────────────────────────────────────────
+
 function renderStats() {
   const rehab    = animalesCentro.filter(a =>
     a.estado_actual?.toLowerCase().includes('rehabilitaci')).length;
@@ -120,7 +120,7 @@ function renderStats() {
   document.getElementById('statRehab').textContent       = `${rehab} en rehabilitación`;
   document.getElementById('statCriticos').textContent    = criticos;
 
-  // Tabla resumen animales con seguimiento
+
   const tbResumen = document.getElementById('tablaResumenMisAnimales');
   if (tbResumen) {
     tbResumen.innerHTML = misAnimales.length
@@ -133,7 +133,7 @@ function renderStats() {
       : emptyRow(3, 'Aún no tienes animales con historial tuyo');
   }
 
-  // Tabla resumen historial
+
   const tbHist = document.getElementById('tablaResumenHistorial');
   if (tbHist) {
     tbHist.innerHTML = historialMio.length
@@ -152,7 +152,7 @@ function renderStats() {
   }
 }
 
-// ── ANIMALES ──────────────────────────────────────────────
+
 function renderAnimales() {
   const tbody = document.getElementById('tablaAnimales');
   if (!tbody) return;
@@ -278,7 +278,7 @@ async function guardarEstadoAnimal(id) {
   }
 }
 
-// ── HISTORIAL MÉDICO ──────────────────────────────────────
+
 function renderHistorial() {
   const tbody = document.getElementById('tablaHistorial');
   if (!tbody) return;
@@ -372,14 +372,14 @@ async function guardarHistorial() {
   }
 }
 
-// ── RESCATES ──────────────────────────────────────────────
+
 async function cargarRescates() {
   try {
     const res = await apiFetch('/rescates/');
     if (!res.ok) throw new Error('Error ' + res.status);
     const todos = await res.json();
 
-    // Filtrar solo rescates vinculados a animales de este centro
+
     const idsRescatesCentro = new Set(
       animalesCentro.map(a => a.id_rescate).filter(Boolean)
     );
@@ -405,7 +405,7 @@ function renderRescates() {
   tbody.innerHTML = [...rescatesCentro]
     .sort((a, b) => new Date(b.fecha_rescate || 0) - new Date(a.fecha_rescate || 0))
     .map(r => {
-      // Buscar animal vinculado a este rescate
+
       const animal = animalesCentro.find(a => a.id_rescate === r.id_rescate);
       const especie = animal ? nombreEspecie(animal.id_especie) : (r.especie_reportada || '—');
       const estado  = animal ? badgeEstadoAnimal(animal.estado_actual) : '—';
@@ -421,7 +421,7 @@ function renderRescates() {
     }).join('');
 }
 
-// ── ESPECIES ──────────────────────────────────────────────
+
 async function cargarEspecies() {
   try {
     const res = await apiFetch('/especies/');
@@ -440,7 +440,7 @@ function tipoEspecie(id_especie) {
   return e ? (e.tipo || '—') : '—';
 }
 
-// ── MODALES / UI ──────────────────────────────────────────
+
 function abrirModal(id)  { document.getElementById(id).classList.add('visible'); lucide.createIcons(); }
 function cerrarModal(id) { document.getElementById(id).classList.remove('visible'); }
 
@@ -476,7 +476,7 @@ function cerrarSesion() {
   window.location.href = 'login_personal.html';
 }
 
-// ── TOAST ─────────────────────────────────────────────────
+
 function toast(msg, tipo = 'info') {
   const cont = document.getElementById('toastContainer');
   const el   = document.createElement('div');
@@ -491,7 +491,7 @@ function toast(msg, tipo = 'info') {
   setTimeout(() => el.remove(), 3500);
 }
 
-// ── BADGES ────────────────────────────────────────────────
+
 function badgeEstadoAnimal(estado) {
   if (!estado) return '<span class="badge badge-estable">—</span>';
   const e = estado.toLowerCase();

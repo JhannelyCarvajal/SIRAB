@@ -10,8 +10,8 @@
 </head>
 <body>
 
-<!-- ══ SIDEBAR ══════════════════════════════════════════════ -->
-<aside class="sidebar">
+
+  <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-text">SIRA<span>B</span></div>
     <div class="logo-badge"><i data-lucide="landmark"></i> Administrador</div>
@@ -55,7 +55,7 @@
   </div>
 </aside>
 
-<!-- ══ MAIN ══════════════════════════════════════════════════ -->
+
 <main class="main">
 
   <div class="topbar">
@@ -66,7 +66,7 @@
     <div class="topbar-date" id="topbarFecha"></div>
   </div>
 
-  <!-- ══ RESUMEN ══════════════════════════════════════════════ -->
+
   <section class="seccion active" id="sec-resumen">
     <div class="stats-grid">
       <div class="stat-card">
@@ -128,7 +128,7 @@
     </div>
   </section>
 
-  <!-- ══ ANIMALES ═════════════════════════════════════════════ -->
+
   <section class="seccion" id="sec-animales">
     <div class="panel">
       <div class="panel-header">
@@ -151,7 +151,7 @@
     </div>
   </section>
 
-  <!-- ══ HISTORIAL MÉDICO ══════════════════════════════════════ -->
+
   <section class="seccion" id="sec-historial">
     <div class="panel">
       <div class="panel-header">
@@ -174,7 +174,7 @@
     </div>
   </section>
 
-  <!-- ══ PERSONAL ══════════════════════════════════════════════ -->
+
   <section class="seccion" id="sec-personal">
     <div class="panel">
       <div class="panel-header">
@@ -197,7 +197,7 @@
     </div>
   </section>
 
-  <!-- ══ USUARIOS ══════════════════════════════════════════════ -->
+
   <section class="seccion" id="sec-usuarios">
     <div class="panel">
       <div class="panel-header">
@@ -218,12 +218,12 @@
   </section>
 
 
-  <!-- ══ REPORTES ════════════════════════════════════════════ -->
+
   <section class="seccion" id="sec-reportes">
 
     <div class="grid-2" style="margin-bottom:1.5rem">
 
-      <!-- Animales por especie -->
+
       <div class="panel">
         <div class="panel-header">
           <h3>Animales por especie</h3>
@@ -239,7 +239,7 @@
         </div>
       </div>
 
-      <!-- Animales por estado -->
+
       <div class="panel">
         <div class="panel-header">
           <h3>Animales por estado</h3>
@@ -259,7 +259,7 @@
 
     <div class="grid-2" style="margin-bottom:1.5rem">
 
-      <!-- Animales por tipo de especie -->
+
       <div class="panel">
         <div class="panel-header">
           <h3>Animales por tipo</h3>
@@ -275,7 +275,7 @@
         </div>
       </div>
 
-      <!-- Rescates por tipo de incidente -->
+
       <div class="panel">
         <div class="panel-header">
           <h3>Rescates por tipo de incidente</h3>
@@ -293,7 +293,7 @@
 
     </div>
 
-    <!-- Actividad de veterinarios -->
+
     <div class="panel">
       <div class="panel-header">
         <h3>Actividad de veterinarios</h3>
@@ -313,7 +313,7 @@
 
 </main>
 
-<!-- ══ MODAL: VER ANIMAL ════════════════════════════════════ -->
+
 <div class="modal-overlay" id="modalVerAnimal">
   <div class="modal modal-lg">
     <div class="modal-header">
@@ -346,7 +346,7 @@
   </div>
 </div>
 
-<!-- ══ MODAL: REGISTRAR ANIMAL ══════════════════════════════ -->
+
 <div class="modal-overlay" id="modalAnimal">
   <div class="modal">
     <div class="modal-header">
@@ -412,7 +412,7 @@
   </div>
 </div>
 
-<!-- ══ MODAL: REGISTRAR PERSONAL ════════════════════════════ -->
+
 <div class="modal-overlay" id="modalPersonal">
   <div class="modal">
     <div class="modal-header">
@@ -473,7 +473,7 @@
   </div>
 </div>
 
-<!-- ══ MODAL: CREAR USUARIO ═════════════════════════════════ -->
+
 <div class="modal-overlay" id="modalUsuario">
   <div class="modal">
     <div class="modal-header">
@@ -509,7 +509,7 @@
   </div>
 </div>
 
-<!-- ══ MODAL: NUEVO REGISTRO MÉDICO ═════════════════════════ -->
+
 <div class="modal-overlay" id="modalHistorial">
   <div class="modal">
     <div class="modal-header">
@@ -574,7 +574,7 @@
   }
 </script>
 
-<!-- ══ MODAL: REPORTE VETERINARIO ══════════════════════════ -->
+
 <div class="modal-overlay" id="modalReporteVet">
   <div class="modal modal-lg">
     <div class="modal-header">
@@ -585,7 +585,7 @@
       <button class="modal-close" onclick="cerrarModal('modalReporteVet')"><i data-lucide="x"></i></button>
     </div>
     <div class="modal-body">
-      <!-- Stats rápidos -->
+
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.2rem">
         <div style="background:rgba(122,181,138,0.07);border:1px solid rgba(122,181,138,0.12);border-radius:0.8rem;padding:1rem">
           <div style="font-size:0.68rem;color:rgba(245,240,232,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Total registros</div>
@@ -596,7 +596,7 @@
           <div style="font-size:1.1rem;font-weight:600;color:var(--crema)" id="modalVetUltimo">—</div>
         </div>
       </div>
-      <!-- Historial -->
+
       <div style="font-size:0.72rem;font-weight:700;color:rgba(245,240,232,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.8rem">
         Registros médicos
       </div>
